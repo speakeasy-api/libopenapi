@@ -16,9 +16,9 @@
 package what_changed
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/what-changed/model"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/v2"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/what-changed/model"
 )
 
 // CompareOpenAPIDocuments will compare left (original) and right (updated) OpenAPI 3+ documents and extract every change

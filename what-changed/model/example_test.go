@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 
-	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 )
 
 func TestCompareExamples_SummaryModified(t *testing.T) {

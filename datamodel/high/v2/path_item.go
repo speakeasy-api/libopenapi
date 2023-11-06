@@ -6,8 +6,8 @@ package v2
 import (
 	"sync"
 
-	"github.com/pb33f/libopenapi/datamodel/high"
-	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 )
 
 // PathItem represents a high-level Swagger / OpenAPI 2 PathItem object backed by a low-level one.

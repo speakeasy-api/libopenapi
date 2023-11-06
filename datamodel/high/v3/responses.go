@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/high"
-	lowbase "github.com/pb33f/libopenapi/datamodel/low"
-	low "github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	lowbase "github.com/speakeasy-api/libopenapi/datamodel/low"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"gopkg.in/yaml.v3"
 )
 

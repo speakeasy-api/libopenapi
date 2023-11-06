@@ -4,8 +4,8 @@
 package model
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 )
 
 // ContactChanges Represent changes to a Contact object that is a child of Info, part of an OpenAPI document.

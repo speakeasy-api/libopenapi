@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	v2 "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 )
 

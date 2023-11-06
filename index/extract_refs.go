@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v3"
 )
@@ -40,7 +40,7 @@ func (index *SpecIndex) ExtractRefs(node, parent *yaml.Node, seenPath []string, 
 
 			// check if we're dealing with an inline schema definition, that isn't part of an array
 			// (which means it's being used as a value in an array, and it's not a label)
-			// https://github.com/pb33f/libopenapi/issues/76
+			// https://github.com/speakeasy-api/libopenapi/issues/76
 			schemaContainingNodes := []string{"schema", "items", "additionalProperties", "contains", "not", "unevaluatedItems", "unevaluatedProperties"}
 			if i%2 == 0 && slices.Contains(schemaContainingNodes, n.Value) && !utils.IsNodeArray(node) && (i+1 < len(node.Content)) {
 				ref := &Reference{
@@ -74,7 +74,7 @@ func (index *SpecIndex) ExtractRefs(node, parent *yaml.Node, seenPath []string, 
 			}
 
 			// Perform the same check for all maps of schemas like properties and patternProperties
-			// https://github.com/pb33f/libopenapi/issues/76
+			// https://github.com/speakeasy-api/libopenapi/issues/76
 			mapOfSchemaContainingNodes := []string{"properties", "patternProperties"}
 			if i%2 == 0 && slices.Contains(mapOfSchemaContainingNodes, n.Value) && !utils.IsNodeArray(node) && (i+1 < len(node.Content)) {
 				// for each property add it to our schema definitions

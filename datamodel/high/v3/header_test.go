@@ -4,7 +4,7 @@
 package v3
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/high/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/high/base"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

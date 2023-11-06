@@ -584,7 +584,7 @@ func ConvertComponentIdIntoFriendlyPathSearch(id string) (string, string) {
 		} else {
 
 			// check for brackets in the name, and if found, rewire the path to encapsulate them
-			// correctly. https://github.com/pb33f/libopenapi/issues/112
+			// correctly. https://github.com/speakeasy-api/libopenapi/issues/112
 			brackets := bracketNameExp.FindStringSubmatch(segs[i])
 
 			if len(brackets) > 0 {

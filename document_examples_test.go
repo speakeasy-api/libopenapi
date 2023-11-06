@@ -5,18 +5,18 @@ package libopenapi
 
 import (
 	"fmt"
-	"github.com/pb33f/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel"
 	"net/url"
 	"os"
 	"strings"
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel/high"
-	v3high "github.com/pb33f/libopenapi/datamodel/high/v3"
-	low "github.com/pb33f/libopenapi/datamodel/low/base"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/resolver"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	v3high "github.com/speakeasy-api/libopenapi/datamodel/high/v3"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/resolver"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"github.com/stretchr/testify/assert"
 )
 

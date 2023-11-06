@@ -6,10 +6,10 @@ package v3
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"gopkg.in/yaml.v3"
 	"sort"
 	"strings"
@@ -124,7 +124,7 @@ func (o *Operation) Build(_, root *yaml.Node, idx *index.SpecIndex) error {
 	}
 
 	// if security is set, but no requirements are defined.
-	// https://github.com/pb33f/libopenapi/issues/111
+	// https://github.com/speakeasy-api/libopenapi/issues/111
 	if sln != nil && len(svn.Content) == 0 && sec == nil {
 		o.Security = low.NodeReference[[]low.ValueReference[*base.SecurityRequirement]]{
 			Value:     []low.ValueReference[*base.SecurityRequirement]{}, // empty

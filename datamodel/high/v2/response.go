@@ -4,9 +4,9 @@
 package v2
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/high"
-	"github.com/pb33f/libopenapi/datamodel/high/base"
-	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	"github.com/speakeasy-api/libopenapi/datamodel/high/base"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 )
 
 // Response is a representation of a high-level Swagger / OpenAPI 2 Response object, backed by a low-level one.

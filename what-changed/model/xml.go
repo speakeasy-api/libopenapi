@@ -4,8 +4,8 @@
 package model
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 )
 
 // XMLChanges represents changes made to the XML object of an OpenAPI document.

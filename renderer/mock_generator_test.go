@@ -5,9 +5,9 @@ package renderer
 
 import (
 	"encoding/json"
-	highbase "github.com/pb33f/libopenapi/datamodel/high/base"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
+	highbase "github.com/speakeasy-api/libopenapi/datamodel/high/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	lowbase "github.com/speakeasy-api/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 	"strings"

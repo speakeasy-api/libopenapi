@@ -6,8 +6,8 @@ package v2
 import (
 	"os"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	v2 "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 	"github.com/stretchr/testify/assert"
 
 	"testing"

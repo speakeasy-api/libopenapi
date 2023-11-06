@@ -4,10 +4,10 @@
 package v2
 
 import (
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/high"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	v2low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	v2low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 )
 
 // Paths represents a high-level Swagger / OpenAPI Paths object, backed by a low-level one.

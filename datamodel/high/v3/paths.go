@@ -6,11 +6,11 @@ package v3
 import (
 	"sort"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/high"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	v3low "github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	v3low "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"gopkg.in/yaml.v3"
 )
 

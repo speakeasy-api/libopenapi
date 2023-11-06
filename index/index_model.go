@@ -4,7 +4,7 @@
 package index
 
 import (
-	"github.com/pb33f/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel"
 	"io/fs"
 	"net/http"
 	"net/url"
@@ -48,7 +48,7 @@ type ReferenceMapped struct {
 // SpecIndexConfig is a configuration struct for the SpecIndex introduced in 0.6.0 that provides an expandable
 // set of granular options. The first being the ability to set the Base URL for resolving relative references, and
 // allowing or disallowing remote or local file lookups.
-//   - https://github.com/pb33f/libopenapi/issues/73
+//   - https://github.com/speakeasy-api/libopenapi/issues/73
 type SpecIndexConfig struct {
 	// The BaseURL will be the root from which relative references will be resolved from if they can't be found locally.
 	//
@@ -61,12 +61,12 @@ type SpecIndexConfig struct {
 	// If our baseURL is set to https://pb33f.io/libopenapi then our reference will try to be resolved from:
 	//  - $ref: https://pb33f.io/libopenapi/somefile.yaml#/components/schemas/SomeSchema
 	//
-	// More details on relative references can be found in issue #73: https://github.com/pb33f/libopenapi/issues/73
+	// More details on relative references can be found in issue #73: https://github.com/speakeasy-api/libopenapi/issues/73
 	BaseURL *url.URL // set the Base URL for resolving relative references if the spec is exploded.
 
 	// If resolving remotely, the RemoteURLHandler will be used to fetch the remote document.
 	// If not set, the default http client will be used.
-	// Resolves [#132]: https://github.com/pb33f/libopenapi/issues/132
+	// Resolves [#132]: https://github.com/speakeasy-api/libopenapi/issues/132
 	RemoteURLHandler func(url string) (*http.Response, error)
 
 	// FSHandler is an entity that implements the `fs.FS` interface that will be used to fetch local or remote documents.
@@ -80,7 +80,7 @@ type SpecIndexConfig struct {
 	// Is the FSHandler is set, it will be used for all lookups, regardless of whether they are local or remote.
 	// it also overrides the RemoteURLHandler if set.
 	//
-	// Resolves[#85] https://github.com/pb33f/libopenapi/issues/85
+	// Resolves[#85] https://github.com/speakeasy-api/libopenapi/issues/85
 	FSHandler fs.FS
 
 	// If resolving locally, the BasePath will be the root from which relative references will be resolved from
@@ -91,7 +91,7 @@ type SpecIndexConfig struct {
 	// There was a potential for a remote exploit if a remote reference was malicious. There aren't any known
 	// exploits, but it's better to be safe than sorry.
 	//
-	// To read more about this, you can find a discussion here: https://github.com/pb33f/libopenapi/pull/64
+	// To read more about this, you can find a discussion here: https://github.com/speakeasy-api/libopenapi/pull/64
 	AllowRemoteLookup bool // Allow remote lookups for references. Defaults to false
 	AllowFileLookup   bool // Allow file lookups for references. Defaults to false
 

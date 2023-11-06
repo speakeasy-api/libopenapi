@@ -6,12 +6,12 @@ package low
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"strings"
 	"testing"
 
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/resolver"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/resolver"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

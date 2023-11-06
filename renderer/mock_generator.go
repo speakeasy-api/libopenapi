@@ -6,7 +6,7 @@ package renderer
 import (
 	"encoding/json"
 	"fmt"
-	highbase "github.com/pb33f/libopenapi/datamodel/high/base"
+	highbase "github.com/speakeasy-api/libopenapi/datamodel/high/base"
 	"gopkg.in/yaml.v3"
 	"reflect"
 )

@@ -651,7 +651,7 @@ func TestSpecIndex_lookupRemoteReference_SeenSourceSimulation_BadFind(t *testing
 	assert.Nil(t, b)
 }
 
-// Discovered in issue https://github.com/pb33f/libopenapi/issues/37
+// Discovered in issue https://github.com/speakeasy-api/libopenapi/issues/37
 func TestSpecIndex_lookupRemoteReference_NoComponent(t *testing.T) {
 	index := new(SpecIndex)
 	index.seenRemoteSources = make(map[string]*yaml.Node)

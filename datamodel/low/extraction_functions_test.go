@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/resolver"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/resolver"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

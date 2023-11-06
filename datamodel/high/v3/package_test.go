@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	lowv3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 )
 
 // An example of how to create a new high-level OpenAPI 3+ document from an OpenAPI specification.

@@ -6,9 +6,9 @@ package model
 import (
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel/low"
-	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	v2 "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

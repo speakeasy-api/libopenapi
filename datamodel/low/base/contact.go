@@ -5,8 +5,8 @@ package base
 
 import (
 	"crypto/sha256"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/index"
 	"gopkg.in/yaml.v3"
 	"strings"
 )

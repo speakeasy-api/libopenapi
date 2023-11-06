@@ -4,9 +4,9 @@
 package base
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/high"
-	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	lowmodel "github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
 	"gopkg.in/yaml.v3"
 )
 
@@ -62,7 +62,7 @@ type Schema struct {
 	UnevaluatedItems  *SchemaProxy            `json:"unevaluatedItems,omitempty" yaml:"unevaluatedItems,omitempty"`
 
 	// in 3.1 UnevaluatedProperties can be a Schema or a boolean
-	// https://github.com/pb33f/libopenapi/issues/118
+	// https://github.com/speakeasy-api/libopenapi/issues/118
 	UnevaluatedProperties *DynamicValue[*SchemaProxy, bool] `json:"unevaluatedProperties,omitempty" yaml:"unevaluatedProperties,omitempty"`
 
 	// in 3.1 Items can be a Schema or a boolean
@@ -94,8 +94,8 @@ type Schema struct {
 	Default              any                               `json:"default,omitempty" yaml:"default,renderZero,omitempty"`
 	Const                any                               `json:"const,omitempty" yaml:"const,renderZero,omitempty"`
 	Nullable             *bool                             `json:"nullable,omitempty" yaml:"nullable,omitempty"`
-	ReadOnly             bool                              `json:"readOnly,omitempty" yaml:"readOnly,omitempty"`   // https://github.com/pb33f/libopenapi/issues/30
-	WriteOnly            bool                              `json:"writeOnly,omitempty" yaml:"writeOnly,omitempty"` // https://github.com/pb33f/libopenapi/issues/30
+	ReadOnly             bool                              `json:"readOnly,omitempty" yaml:"readOnly,omitempty"`   // https://github.com/speakeasy-api/libopenapi/issues/30
+	WriteOnly            bool                              `json:"writeOnly,omitempty" yaml:"writeOnly,omitempty"` // https://github.com/speakeasy-api/libopenapi/issues/30
 	XML                  *XML                              `json:"xml,omitempty" yaml:"xml,omitempty"`
 	ExternalDocs         *ExternalDoc                      `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
 	Example              any                               `json:"example,omitempty" yaml:"example,omitempty"`

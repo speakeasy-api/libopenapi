@@ -5,7 +5,7 @@ package base
 
 import (
 	"crypto/sha256"
-	"github.com/pb33f/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
 	"sort"
 	"strings"
 )

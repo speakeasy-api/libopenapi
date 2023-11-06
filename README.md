@@ -5,11 +5,11 @@
 # libopenapi - enterprise grade OpenAPI tools for golang.
 
 
-![Pipeline](https://github.com/pb33f/libopenapi/workflows/Build/badge.svg)
-[![GoReportCard](https://goreportcard.com/badge/github.com/pb33f/libopenapi)](https://goreportcard.com/report/github.com/pb33f/libopenapi)
+![Pipeline](https://github.com/speakeasy-api/libopenapi/workflows/Build/badge.svg)
+[![GoReportCard](https://goreportcard.com/badge/github.com/speakeasy-api/libopenapi)](https://goreportcard.com/report/github.com/speakeasy-api/libopenapi)
 [![codecov](https://codecov.io/gh/pb33f/libopenapi/branch/main/graph/badge.svg?)](https://codecov.io/gh/pb33f/libopenapi)
 [![discord](https://img.shields.io/discord/923258363540815912)](https://discord.gg/x7VACVuEGP)
-[![Docs](https://img.shields.io/badge/godoc-reference-5fafd7)](https://pkg.go.dev/github.com/pb33f/libopenapi)
+[![Docs](https://img.shields.io/badge/godoc-reference-5fafd7)](https://pkg.go.dev/github.com/speakeasy-api/libopenapi)
 
 libopenapi has full support for Swagger (OpenAPI 2), OpenAPI 3, and OpenAPI 3.1. It can handle the largest and most
 complex specifications you can think of.
@@ -51,7 +51,7 @@ come say hi!
 ## Check out the `libopenapi-validator`
 
 Need to validate requests, responses, parameters or schemas? Use the new 
-[libopenapi-validator](https://github.com/pb33f/libopenapi-validator) module.
+[libopenapi-validator](https://github.com/speakeasy-api/libopenapi-validator) module.
 
 ## Documentation
 
@@ -72,7 +72,7 @@ See all the documentation at https://pb33f.io/libopenapi/
 - [FAQ](https://pb33f.io/libopenapi/faq/)
 - [About libopenapi](https://pb33f.io/libopenapi/about/)
 
-> **Read the go docs at [https://pkg.go.dev/github.com/pb33f/libopenapi](https://pkg.go.dev/github.com/pb33f/libopenapi)**
+> **Read the go docs at [https://pkg.go.dev/github.com/speakeasy-api/libopenapi](https://pkg.go.dev/github.com/speakeasy-api/libopenapi)**
 ---
 
 ### Quick-start tutorial
@@ -80,7 +80,7 @@ See all the documentation at https://pb33f.io/libopenapi/
 👀 **Get rolling fast using `libopenapi` with the 
 [Parsing OpenAPI files using go](https://quobix.com/articles/parsing-openapi-using-go/)** guide 👀
 
-> Read the full docs at [https://pkg.go.dev](https://pkg.go.dev/github.com/pb33f/libopenapi)
+> Read the full docs at [https://pkg.go.dev](https://pkg.go.dev/github.com/speakeasy-api/libopenapi)
 
 ---
 

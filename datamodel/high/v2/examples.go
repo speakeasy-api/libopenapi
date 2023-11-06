@@ -3,7 +3,7 @@
 
 package v2
 
-import low "github.com/pb33f/libopenapi/datamodel/low/v2"
+import low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 
 // Example represents a high-level Swagger / OpenAPI 2 Example object, backed by a low level one.
 // Allows sharing examples for operation responses

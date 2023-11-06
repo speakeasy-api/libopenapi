@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel"
 	"github.com/stretchr/testify/assert"
 )
 

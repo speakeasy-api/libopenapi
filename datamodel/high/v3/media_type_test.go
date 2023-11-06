@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/low"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/index"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

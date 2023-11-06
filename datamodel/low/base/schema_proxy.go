@@ -6,8 +6,8 @@ package base
 import (
 	"crypto/sha256"
 
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -88,7 +88,7 @@ func (sp *SchemaProxy) Schema() *Schema {
 		sp.buildError = err
 		return nil
 	}
-	schema.ParentProxy = sp // https://github.com/pb33f/libopenapi/issues/29
+	schema.ParentProxy = sp // https://github.com/speakeasy-api/libopenapi/issues/29
 	sp.rendered = schema
 	return schema
 }

@@ -3,7 +3,7 @@ package v3
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/pb33f/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
 	"sort"
 	"strings"
 )

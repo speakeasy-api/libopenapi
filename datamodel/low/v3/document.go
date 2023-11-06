@@ -9,9 +9,9 @@
 package v3
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	"github.com/pb33f/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/index"
 )
 
 type Document struct {

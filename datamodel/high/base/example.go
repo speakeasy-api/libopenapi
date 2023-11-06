@@ -4,9 +4,9 @@
 package base
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/high"
-	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
-	low "github.com/pb33f/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	lowmodel "github.com/speakeasy-api/libopenapi/datamodel/low"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/base"
 	"gopkg.in/yaml.v3"
 )
 

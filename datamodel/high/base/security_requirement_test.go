@@ -4,8 +4,8 @@
 package base
 
 import (
-	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
-	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
+	lowmodel "github.com/speakeasy-api/libopenapi/datamodel/low"
+	lowbase "github.com/speakeasy-api/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 	"strings"

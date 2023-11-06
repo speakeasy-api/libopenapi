@@ -4,7 +4,7 @@
 package base
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/high"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
 	"gopkg.in/yaml.v3"
 	"reflect"
 )

@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/lucasjones/reggen"
-	"github.com/pb33f/libopenapi/datamodel/high/base"
+	"github.com/speakeasy-api/libopenapi/datamodel/high/base"
 	"golang.org/x/exp/slices"
 )
 

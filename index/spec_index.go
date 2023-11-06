@@ -18,7 +18,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
 	"golang.org/x/sync/syncmap"
 	"gopkg.in/yaml.v3"
@@ -51,7 +51,7 @@ func NewSpecIndexWithConfig(rootNode *yaml.Node, config *SpecIndexConfig) *SpecI
 // defaults to allowing remote references and file references. This is a potential security risk and should be controlled by
 // providing a SpecIndexConfig that explicitly sets the AllowRemoteLookup and AllowFileLookup to true.
 // This function also does not support specifications with relative references that may not exist locally.
-//   - https://github.com/pb33f/libopenapi/issues/73
+//   - https://github.com/speakeasy-api/libopenapi/issues/73
 func NewSpecIndex(rootNode *yaml.Node) *SpecIndex {
 	index := new(SpecIndex)
 	index.config = CreateOpenAPIIndexConfig()

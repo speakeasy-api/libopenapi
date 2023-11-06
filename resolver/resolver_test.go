@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/pb33f/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/index"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

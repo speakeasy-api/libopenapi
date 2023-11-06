@@ -17,17 +17,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/pb33f/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/index"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	v2high "github.com/pb33f/libopenapi/datamodel/high/v2"
-	v3high "github.com/pb33f/libopenapi/datamodel/high/v3"
-	v2low "github.com/pb33f/libopenapi/datamodel/low/v2"
-	v3low "github.com/pb33f/libopenapi/datamodel/low/v3"
-	"github.com/pb33f/libopenapi/resolver"
-	"github.com/pb33f/libopenapi/utils"
-	what_changed "github.com/pb33f/libopenapi/what-changed"
-	"github.com/pb33f/libopenapi/what-changed/model"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	v2high "github.com/speakeasy-api/libopenapi/datamodel/high/v2"
+	v3high "github.com/speakeasy-api/libopenapi/datamodel/high/v3"
+	v2low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
+	v3low "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/resolver"
+	"github.com/speakeasy-api/libopenapi/utils"
+	what_changed "github.com/speakeasy-api/libopenapi/what-changed"
+	"github.com/speakeasy-api/libopenapi/what-changed/model"
 	"gopkg.in/yaml.v3"
 )
 

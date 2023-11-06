@@ -6,8 +6,8 @@ package low
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
 	"gopkg.in/yaml.v3"
 	"reflect"

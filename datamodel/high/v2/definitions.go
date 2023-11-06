@@ -4,10 +4,10 @@
 package v2
 
 import (
-	highbase "github.com/pb33f/libopenapi/datamodel/high/base"
-	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
-	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
-	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	highbase "github.com/speakeasy-api/libopenapi/datamodel/high/base"
+	lowmodel "github.com/speakeasy-api/libopenapi/datamodel/low"
+	lowbase "github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 )
 
 // Definitions is a high-level represents of a Swagger / OpenAPI 2 Definitions object, backed by a low-level one.

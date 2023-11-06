@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"gopkg.in/yaml.v3"
 )
 

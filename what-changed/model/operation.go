@@ -8,10 +8,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
-	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	v2 "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
+	v3 "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 	"gopkg.in/yaml.v3"
 )
 

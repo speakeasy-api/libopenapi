@@ -6,12 +6,12 @@ package v3
 import (
 	"sync"
 
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/high"
-	highbase "github.com/pb33f/libopenapi/datamodel/high/base"
-	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/base"
-	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/high"
+	highbase "github.com/speakeasy-api/libopenapi/datamodel/high/base"
+	lowmodel "github.com/speakeasy-api/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	low "github.com/speakeasy-api/libopenapi/datamodel/low/v3"
 	"gopkg.in/yaml.v3"
 )
 

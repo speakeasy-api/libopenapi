@@ -4,9 +4,9 @@ package libopenapi
 
 import (
 	"fmt"
-	"github.com/pb33f/libopenapi/datamodel"
-	"github.com/pb33f/libopenapi/datamodel/high/base"
-	"github.com/pb33f/libopenapi/what-changed/model"
+	"github.com/speakeasy-api/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel/high/base"
+	"github.com/speakeasy-api/libopenapi/what-changed/model"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"strings"

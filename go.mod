@@ -1,4 +1,4 @@
-module github.com/pb33f/libopenapi
+module github.com/speakeasy-api/libopenapi
 
 go 1.20
 

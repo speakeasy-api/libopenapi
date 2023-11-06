@@ -3,7 +3,7 @@
 
 package v2
 
-import low "github.com/pb33f/libopenapi/datamodel/low/v2"
+import low "github.com/speakeasy-api/libopenapi/datamodel/low/v2"
 
 // ParameterDefinitions is a high-level representation of a Swagger / OpenAPI 2 Parameters Definitions object
 // that is backed by a low-level one.

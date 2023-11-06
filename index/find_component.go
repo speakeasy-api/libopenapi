@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
 	"gopkg.in/yaml.v3"
 )
@@ -58,7 +58,7 @@ func (index *SpecIndex) FindComponent(componentId string, parent *yaml.Node) *Re
 			// this means there is no component to look-up and the entire file should be pulled in.
 			// to stop all the other code from breaking (that is expecting a component), let's just post-pend
 			// a hash to the end of the componentId and ensure the uri slice is as expected.
-			// described in https://github.com/pb33f/libopenapi/issues/37
+			// described in https://github.com/speakeasy-api/libopenapi/issues/37
 			componentId = fmt.Sprintf("%s#", componentId)
 			uri = append(uri, "")
 			return index.performExternalLookup(uri, componentId, remoteLookup, parent)
@@ -74,7 +74,7 @@ func (index *SpecIndex) FindComponent(componentId string, parent *yaml.Node) *Re
 			// this means there is no component to look-up and the entire file should be pulled in.
 			// to stop all the other code from breaking (that is expecting a component), let's just post-pend
 			// a hash to the end of the componentId and ensure the uri slice is as expected.
-			// described in https://github.com/pb33f/libopenapi/issues/37
+			// described in https://github.com/speakeasy-api/libopenapi/issues/37
 			//
 			// ^^ this same issue was re-reported in file based lookups in vacuum.
 			// more info here: https://github.com/daveshanley/vacuum/issues/225

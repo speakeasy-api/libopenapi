@@ -14,7 +14,7 @@
 package high
 
 import (
-	"github.com/pb33f/libopenapi/datamodel/low"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
 )
 
 // GoesLow is used to represent any high-level model. All high level models meet this interface and can be used to
@@ -51,7 +51,7 @@ func ExtractExtensions(extensions map[low.KeyReference[string]]low.ValueReferenc
 //
 // This feature will be upgraded at some point to hold a registry of types and extension mappings to make this
 // functionality available a little more automatically.
-// You can read more about the discussion here: https://github.com/pb33f/libopenapi/issues/8
+// You can read more about the discussion here: https://github.com/speakeasy-api/libopenapi/issues/8
 //
 // `T` represents the Type you want to unpack into
 // `R` represents the LOW type of the object that contains the extensions (not the high)

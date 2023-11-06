@@ -5,14 +5,14 @@ package base
 
 import (
 	"fmt"
-	"github.com/pb33f/libopenapi/datamodel"
+	"github.com/speakeasy-api/libopenapi/datamodel"
 	"strings"
 	"testing"
 
-	"github.com/pb33f/libopenapi/datamodel/low"
-	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
-	"github.com/pb33f/libopenapi/index"
-	"github.com/pb33f/libopenapi/utils"
+	"github.com/speakeasy-api/libopenapi/datamodel/low"
+	lowbase "github.com/speakeasy-api/libopenapi/datamodel/low/base"
+	"github.com/speakeasy-api/libopenapi/index"
+	"github.com/speakeasy-api/libopenapi/utils"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )

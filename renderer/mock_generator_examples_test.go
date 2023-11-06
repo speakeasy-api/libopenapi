@@ -5,7 +5,7 @@ package renderer
 
 import (
 	"fmt"
-	"github.com/pb33f/libopenapi"
+	"github.com/speakeasy-api/libopenapi"
 	"os"
 )
 
