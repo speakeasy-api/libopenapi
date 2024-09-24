@@ -15,6 +15,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Package-level cache for schemas
+var schemaCache = struct {
+	sync.RWMutex
+	m map[string]*Schema
+}{
+	m: make(map[string]*Schema),
+}
+
 // SchemaProxy exists as a stub that will create a Schema once (and only once) the Schema() method is called.
 //
 // Why use a Proxy design?
@@ -73,21 +81,31 @@ func (sp *SchemaProxy) Build(ctx context.Context, key, value *yaml.Node, idx *in
 	return nil
 }
 
-// Schema will first check if this SchemaProxy has already rendered the schema, and return the pre-rendered version
-// first.
+// Schema first checks if this SchemaProxy has already rendered the schema and returns the pre-rendered version
+// if available.
 //
 // If this is the first run of Schema(), then the SchemaProxy will create a new Schema from the underlying
-// yaml.Node. Once built out, the SchemaProxy will record that Schema as rendered and store it for later use,
-// (this is what is we mean when we say 'pre-rendered').
+// yaml.Node. Once built, the Schema is stored for later use.
 //
 // Schema() then returns the newly created Schema.
 //
-// If anything goes wrong during the build, then nothing is returned and the error that occurred can
+// If anything goes wrong during the build, then nothing is returned, and the error can
 // be retrieved by using GetBuildError()
 func (sp *SchemaProxy) Schema() *Schema {
+
+	if sp.Reference.IsReference() {
+		schemaCache.RLock()
+		schema, ok := schemaCache.m[sp.Reference.GetReference()]
+		schemaCache.RUnlock()
+		if ok {
+			return schema
+		}
+	}
+
 	if sp.rendered != nil {
 		return sp.rendered
 	}
+
 	schema := new(Schema)
 	utils.CheckForMergeNodes(sp.vn)
 	err := schema.Build(sp.ctx, sp.vn, sp.idx)
@@ -95,16 +113,24 @@ func (sp *SchemaProxy) Schema() *Schema {
 		sp.buildError = err
 		return nil
 	}
+
 	schema.ParentProxy = sp // https://github.com/pb33f/libopenapi/issues/29
 	sp.rendered = schema
 
-	// for all the nodes added, copy them over to the schema
+	// Copy nodes over to the schema
 	if sp.NodeMap != nil {
 		sp.NodeMap.Nodes.Range(func(key, value any) bool {
 			schema.AddNode(key.(int), value.(*yaml.Node))
 			return true
 		})
 	}
+
+	if sp.Reference.IsReference() {
+		schemaCache.Lock()
+		schemaCache.m[sp.Reference.GetReference()] = schema
+		schemaCache.Unlock()
+	}
+
 	return schema
 }
 
