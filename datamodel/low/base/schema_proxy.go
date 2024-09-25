@@ -92,18 +92,26 @@ func (sp *SchemaProxy) Build(ctx context.Context, key, value *yaml.Node, idx *in
 // If anything goes wrong during the build, then nothing is returned, and the error can
 // be retrieved by using GetBuildError()
 func (sp *SchemaProxy) Schema() *Schema {
+	var cacheKey string
 
-	if sp.Reference.IsReference() {
+	if sp.rendered != nil {
+		return sp.rendered
+	}
+
+	if sp.idx != nil {
+		config := sp.idx.GetConfig()
+		if config.SpecInfo != nil {
+			cacheKey = config.BasePath + sp.Reference.GetReference()
+		}
+	}
+
+	if sp.Reference.IsReference() && cacheKey != "" {
 		schemaCache.RLock()
-		schema, ok := schemaCache.m[sp.Reference.GetReference()]
+		schema, ok := schemaCache.m[cacheKey]
 		schemaCache.RUnlock()
 		if ok {
 			return schema
 		}
-	}
-
-	if sp.rendered != nil {
-		return sp.rendered
 	}
 
 	schema := new(Schema)
@@ -125,9 +133,9 @@ func (sp *SchemaProxy) Schema() *Schema {
 		})
 	}
 
-	if sp.Reference.IsReference() {
+	if sp.Reference.IsReference() && cacheKey != "" {
 		schemaCache.Lock()
-		schemaCache.m[sp.Reference.GetReference()] = schema
+		schemaCache.m[cacheKey] = schema
 		schemaCache.Unlock()
 	}
 
