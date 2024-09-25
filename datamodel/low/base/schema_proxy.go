@@ -16,7 +16,7 @@ import (
 )
 
 // Package-level cache for schemas
-var schemaCache = struct {
+var lowSchemaCache = struct {
 	sync.RWMutex
 	m map[string]*Schema
 }{
@@ -101,14 +101,14 @@ func (sp *SchemaProxy) Schema() *Schema {
 	if sp.idx != nil {
 		config := sp.idx.GetConfig()
 		if config.SpecInfo != nil {
-			cacheKey = config.BasePath + sp.Reference.GetReference()
+			cacheKey = "low" + config.BasePath + sp.Reference.GetReference()
 		}
 	}
 
 	if sp.Reference.IsReference() && cacheKey != "" {
-		schemaCache.RLock()
-		schema, ok := schemaCache.m[cacheKey]
-		schemaCache.RUnlock()
+		lowSchemaCache.RLock()
+		schema, ok := lowSchemaCache.m[cacheKey]
+		lowSchemaCache.RUnlock()
 		if ok {
 			return schema
 		}
@@ -134,9 +134,9 @@ func (sp *SchemaProxy) Schema() *Schema {
 	}
 
 	if sp.Reference.IsReference() && cacheKey != "" {
-		schemaCache.Lock()
-		schemaCache.m[cacheKey] = schema
-		schemaCache.Unlock()
+		lowSchemaCache.Lock()
+		lowSchemaCache.m[cacheKey] = schema
+		lowSchemaCache.Unlock()
 	}
 
 	return schema

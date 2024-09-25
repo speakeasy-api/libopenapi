@@ -14,6 +14,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Package-level cache for high-level schemas
+var highSchemaCache = struct {
+	sync.RWMutex
+	m map[string]*Schema
+}{
+	m: make(map[string]*Schema),
+}
+
 // SchemaProxy exists as a stub that will create a Schema once (and only once) the Schema() method is called. An
 // underlying low-level SchemaProxy backs this high-level one.
 //
@@ -87,25 +95,47 @@ func (sp *SchemaProxy) Schema() *Schema {
 	if sp == nil || sp.lock == nil {
 		return nil
 	}
+
 	sp.lock.Lock()
-	if sp.rendered == nil {
+	defer sp.lock.Unlock()
 
-		s := sp.schema.Value.Schema()
-		if s == nil {
-			sp.buildError = sp.schema.Value.GetBuildError()
-			sp.lock.Unlock()
-			return nil
-		}
-		sch := NewSchema(s)
-		sch.ParentProxy = sp
-
-		sp.rendered = sch
-		sp.lock.Unlock()
-		return sch
-	} else {
-		sp.lock.Unlock()
+	if sp.rendered != nil {
 		return sp.rendered
 	}
+
+	var cacheKey string
+
+	if sp.IsReference() {
+		origin := sp.GetReferenceOrigin()
+		if origin != nil && origin.Index != nil {
+			config := origin.Index.GetConfig()
+			cacheKey = "high" + config.BasePath + sp.GetReference()
+			highSchemaCache.RLock()
+			cachedSchema, ok := highSchemaCache.m[cacheKey]
+			highSchemaCache.RUnlock()
+			if ok {
+				return cachedSchema
+			}
+		}
+	}
+
+	lowSchema := sp.schema.Value.Schema()
+	if lowSchema == nil {
+		sp.buildError = sp.schema.Value.GetBuildError()
+		return nil
+	}
+
+	sch := NewSchema(lowSchema)
+	sch.ParentProxy = sp
+	sp.rendered = sch
+
+	if sp.IsReference() && cacheKey != "" {
+		highSchemaCache.Lock()
+		highSchemaCache.m[cacheKey] = sp.rendered
+		highSchemaCache.Unlock()
+	}
+
+	return sch
 }
 
 // IsReference returns true if the SchemaProxy is a reference to another Schema.
@@ -156,12 +186,8 @@ func (sp *SchemaProxy) GetReferenceOrigin() *index.NodeOrigin {
 
 // BuildSchema operates the same way as Schema, except it will return any error along with the *Schema
 func (sp *SchemaProxy) BuildSchema() (*Schema, error) {
-	if sp.rendered != nil {
-		return sp.rendered, sp.buildError
-	}
 	schema := sp.Schema()
-	er := sp.buildError
-	return schema, er
+	return schema, sp.buildError
 }
 
 // GetBuildError returns any error that was thrown when calling Schema()
