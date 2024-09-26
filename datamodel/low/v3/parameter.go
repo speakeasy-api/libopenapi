@@ -74,7 +74,7 @@ func (p *Parameter) GetExtensions() *orderedmap.Map[low.KeyReference[string], lo
 }
 
 // Build will extract examples, extensions and content/media types.
-func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Parameter, error) {
 	root = utils.NodeAlias(root)
 	p.KeyNode = keyNode
 	p.RootNode = root
@@ -94,7 +94,7 @@ func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// handle schema
 	sch, sErr := base.ExtractSchema(ctx, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	if sch != nil {
 		p.Schema = *sch
@@ -103,7 +103,7 @@ func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// handle examples if set.
 	exps, expsL, expsN, eErr := low.ExtractMap[*base.Example](ctx, base.ExamplesLabel, root, idx)
 	if eErr != nil {
-		return eErr
+		return nil, eErr
 	}
 	// Only consider examples if they are defined in the root node.
 	if exps != nil && slices.Contains(root.Content, expsL) {
@@ -121,7 +121,7 @@ func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// handle content, if set.
 	con, cL, cN, cErr := low.ExtractMap[*MediaType](ctx, ContentLabel, root, idx)
 	if cErr != nil {
-		return cErr
+		return nil, cErr
 	}
 	p.Content = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*MediaType]]]{
 		Value:     con,
@@ -135,7 +135,7 @@ func (p *Parameter) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 		}
 	}
 
-	return nil
+	return p, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Parameter object

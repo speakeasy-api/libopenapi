@@ -28,7 +28,7 @@ func TestPaths_Build(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -46,7 +46,7 @@ func TestPaths_FindPathAndKey(t *testing.T) {
 
 	var n Paths
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	_, k := n.FindPathAndKey("/no/pizza")
 	assert.Equal(t, "because i'm fat", k.Value.Post.Value.Description.Value)
 
@@ -72,7 +72,7 @@ x-milk: creamy`
 
 	var n Paths
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `x-milk: creamy
 /spl/unk:
@@ -92,7 +92,7 @@ x-milk: creamy`
 
 	var n2 Paths
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())
@@ -120,6 +120,6 @@ func TestPaths_Build_Fail_Many(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }

@@ -28,7 +28,7 @@ func (e *Examples) FindExample(name string) *low.ValueReference[*yaml.Node] {
 }
 
 // Build will extract all examples and will attempt to unmarshal content into a map or slice based on type.
-func (e *Examples) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecIndex) error {
+func (e *Examples) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecIndex) (*Examples, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	var keyNode, currNode *yaml.Node
@@ -51,7 +51,7 @@ func (e *Examples) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecInd
 			},
 		)
 	}
-	return nil
+	return e, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Examples object

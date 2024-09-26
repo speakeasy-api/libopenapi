@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareSecuritySchemes_v2(t *testing.T) {
-
 	left := `type: string
 description: a thing
 flow: heavy
@@ -38,8 +38,8 @@ x-beer: tasty`
 	var rDoc v2.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -47,7 +47,6 @@ x-beer: tasty`
 }
 
 func TestCompareSecuritySchemes_v2_ModifyProps(t *testing.T) {
-
 	left := `type: int
 description: who cares if this changes?
 flow: very heavy
@@ -67,8 +66,8 @@ x-beer: very tasty`
 	var rDoc v2.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -82,7 +81,6 @@ x-beer: very tasty`
 }
 
 func TestCompareSecuritySchemes_v2_AddScope(t *testing.T) {
-
 	left := `description: I am a thing`
 
 	right := `description: I am a thing
@@ -99,8 +97,8 @@ scopes:
 	var rDoc v2.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -112,7 +110,6 @@ scopes:
 }
 
 func TestCompareSecuritySchemes_v2_RemoveScope(t *testing.T) {
-
 	left := `description: I am a thing`
 
 	right := `description: I am a thing
@@ -129,8 +126,8 @@ scopes:
 	var rDoc v2.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&rDoc, &lDoc)
@@ -142,7 +139,6 @@ scopes:
 }
 
 func TestCompareSecuritySchemes_v2_ModifyScope(t *testing.T) {
-
 	left := `scopes:
   pizza: pie`
 
@@ -159,8 +155,8 @@ func TestCompareSecuritySchemes_v2_ModifyScope(t *testing.T) {
 	var rDoc v2.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -172,7 +168,6 @@ func TestCompareSecuritySchemes_v2_ModifyScope(t *testing.T) {
 }
 
 func TestCompareSecuritySchemes_v3(t *testing.T) {
-
 	left := `type: string
 description: a thing
 scheme: fishy
@@ -194,8 +189,8 @@ description: a thing`
 	var rDoc v3.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -203,7 +198,6 @@ description: a thing`
 }
 
 func TestCompareSecuritySchemes_v3_ModifyProps(t *testing.T) {
-
 	left := `type: string
 description: a thing
 scheme: fishy
@@ -225,8 +219,8 @@ x-beer: cool`
 	var rDoc v3.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -241,7 +235,6 @@ x-beer: cool`
 }
 
 func TestCompareSecuritySchemes_v3_AddFlows(t *testing.T) {
-
 	left := `type: oauth`
 
 	right := `type: oauth
@@ -258,8 +251,8 @@ flows:
 	var rDoc v3.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)
@@ -270,7 +263,6 @@ flows:
 }
 
 func TestCompareSecuritySchemes_v3_RemoveFlows(t *testing.T) {
-
 	left := `type: oauth`
 
 	right := `type: oauth
@@ -287,8 +279,8 @@ flows:
 	var rDoc v3.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&rDoc, &lDoc)
@@ -299,7 +291,6 @@ flows:
 }
 
 func TestCompareSecuritySchemes_v3_ModifyFlows(t *testing.T) {
-
 	left := `type: oauth
 flows:
   implicit:
@@ -319,8 +310,8 @@ flows:
 	var rDoc v3.SecurityScheme
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecuritySchemes(&lDoc, &rDoc)

@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestComparePaths_v2(t *testing.T) {
-
 	left := `
 /fresh/cake:
   get:
@@ -37,17 +37,15 @@ func TestComparePaths_v2(t *testing.T) {
 	var rDoc v2.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&rDoc, &lDoc)
 	assert.Nil(t, extChanges)
-
 }
 
 func TestComparePaths_v2_ModifyOp(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -79,8 +77,8 @@ x-windows: washed
 	var rDoc v2.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&lDoc, &rDoc)
@@ -90,7 +88,6 @@ x-windows: washed
 }
 
 func TestComparePaths_v2_AddPath(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -119,8 +116,8 @@ x-windows: dirty
 	var rDoc v2.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&lDoc, &rDoc)
@@ -132,7 +129,6 @@ x-windows: dirty
 }
 
 func TestComparePaths_v2_RemovePath(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -161,8 +157,8 @@ x-windows: dirty
 	var rDoc v2.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&rDoc, &lDoc)
@@ -174,7 +170,6 @@ x-windows: dirty
 }
 
 func TestComparePaths_v3(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -196,17 +191,15 @@ func TestComparePaths_v3(t *testing.T) {
 	var rDoc v3.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&rDoc, &lDoc)
 	assert.Nil(t, extChanges)
-
 }
 
 func TestComparePaths_v3_ModifyOp(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -238,8 +231,8 @@ x-windows: washed
 	var rDoc v3.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&lDoc, &rDoc)
@@ -249,7 +242,6 @@ x-windows: washed
 }
 
 func TestComparePaths_v3_AddPath(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -285,8 +277,8 @@ x-windows: dirty`
 	var rDoc v3.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&lDoc, &rDoc)
@@ -298,7 +290,6 @@ x-windows: dirty`
 }
 
 func TestComparePaths_v3_RemovePath(t *testing.T) {
-
 	left := `/fresh/cake:
   get:
     description: a thing?
@@ -334,8 +325,8 @@ x-windows: dirty`
 	var rDoc v3.Paths
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePaths(&rDoc, &lDoc)

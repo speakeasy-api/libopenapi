@@ -779,10 +779,9 @@ components:
 	}
 	h := NewDocument(lowDoc)
 
-	// render the document to YAML, and it should be identical to the original in size, example ordering isn't
-	// guaranteed, so we can't compare the strings directly
+	// render the document to YAML, and it should be identical to the original in size
 	r, _ := h.Render()
-	assert.Len(t, strings.TrimSpace(string(r)), len(strings.TrimSpace(yml)))
+	assert.Equal(t, strings.TrimSpace(yml), strings.TrimSpace(string(r)))
 }
 
 func TestDocument_MarshalYAML_TestParamRefs(t *testing.T) {

@@ -47,7 +47,7 @@ func (ex *ExternalDoc) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract extensions from the ExternalDoc instance.
-func (ex *ExternalDoc) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (ex *ExternalDoc) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*ExternalDoc, error) {
 	ex.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	ex.RootNode = root
@@ -55,7 +55,7 @@ func (ex *ExternalDoc) Build(ctx context.Context, keyNode, root *yaml.Node, idx 
 	ex.Reference = new(low.Reference)
 	ex.Nodes = low.ExtractNodes(ctx, root)
 	ex.Extensions = low.ExtractExtensions(root)
-	return nil
+	return ex, nil
 }
 
 // GetExtensions returns all ExternalDoc extensions and satisfies the low.HasExtensions interface.

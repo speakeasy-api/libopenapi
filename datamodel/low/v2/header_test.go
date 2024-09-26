@@ -27,7 +27,7 @@ func TestHeader_Build(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -44,7 +44,7 @@ default:
 
 	var n Header
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	assert.NotNil(t, n.Default.Value)
 
@@ -68,7 +68,7 @@ func TestHeader_DefaultAsObject(t *testing.T) {
 
 	var n Header
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	assert.NotNil(t, n.Default.Value)
 }
@@ -82,7 +82,7 @@ func TestHeader_NoDefault(t *testing.T) {
 
 	var n Header
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	assert.Equal(t, 12, n.Minimum.Value)
 }
@@ -117,7 +117,7 @@ multipleOf: 12`
 
 	var n Header
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `description: head
 items:
@@ -149,7 +149,7 @@ pattern: wow
 
 	var n2 Header
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())

@@ -27,7 +27,7 @@ func TestItems_Build(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -43,7 +43,7 @@ default:
 
 	var n Items
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	var def []string
 	_ = n.Default.Value.Decode(&def)
@@ -63,7 +63,7 @@ func TestItems_DefaultAsMap(t *testing.T) {
 
 	var n Items
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	var def map[string]string
 	_ = n.Default.GetValue().Decode(&def)
@@ -100,7 +100,7 @@ multipleOf: 12`
 
 	var n Items
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `items:
  type: int
@@ -131,7 +131,7 @@ pattern: wow
 
 	var n2 Items
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())

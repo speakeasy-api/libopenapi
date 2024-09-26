@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareScopes(t *testing.T) {
-
 	left := `pizza: pie
 lemon: sky
 x-nugget: chicken`
@@ -30,8 +30,8 @@ x-nugget: chicken`
 	var rDoc v2.Scopes
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareScopes(&lDoc, &rDoc)
@@ -39,7 +39,6 @@ x-nugget: chicken`
 }
 
 func TestCompareScopes_Modified(t *testing.T) {
-
 	left := `pizza: sky
 lemon: sky
 x-nugget: chicken`
@@ -56,8 +55,8 @@ x-nugget: chicken`
 	var rDoc v2.Scopes
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareScopes(&lDoc, &rDoc)
@@ -69,7 +68,6 @@ x-nugget: chicken`
 }
 
 func TestCompareScopes_Added(t *testing.T) {
-
 	left := `pizza: sky
 x-nugget: chicken`
 	right := `pizza: sky
@@ -85,8 +83,8 @@ x-nugget: chicken`
 	var rDoc v2.Scopes
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareScopes(&lDoc, &rDoc)
@@ -99,7 +97,6 @@ x-nugget: chicken`
 }
 
 func TestCompareScopes_Removed_ChangeExt(t *testing.T) {
-
 	left := `pizza: sky
 x-nugget: chicken`
 	right := `pizza: sky
@@ -115,8 +112,8 @@ x-nugget: soup`
 	var rDoc v2.Scopes
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareScopes(&rDoc, &lDoc)

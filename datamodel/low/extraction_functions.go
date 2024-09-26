@@ -250,7 +250,7 @@ func ExtractObjectRaw[T Buildable[N], N any](ctx context.Context, key, root *yam
 	if err != nil {
 		return n, err, isReference, referenceValue
 	}
-	err = n.Build(ctx, key, root, idx)
+	n, err = n.Build(ctx, key, root, idx)
 	if err != nil {
 		return n, err, isReference, referenceValue
 	}
@@ -327,7 +327,7 @@ func ExtractObject[T Buildable[N], N any](ctx context.Context, label string, roo
 	if ln == nil {
 		return NodeReference[T]{}, nil
 	}
-	err = n.Build(ctx, ln, vn, idx)
+	n, err = n.Build(ctx, ln, vn, idx)
 	if err != nil {
 		return NodeReference[T]{}, err
 	}
@@ -457,7 +457,8 @@ func ExtractArray[T Buildable[N], N any](ctx context.Context, label string, root
 			if err != nil {
 				return []ValueReference[T]{}, ln, vn, err
 			}
-			berr := n.Build(foundCtx, ln, node, foundIndex)
+			var berr error
+			n, berr = n.Build(foundCtx, ln, node, foundIndex)
 			if berr != nil {
 				return nil, ln, vn, berr
 			}
@@ -557,7 +558,8 @@ func ExtractMapNoLookupExtensions[PT Buildable[N], N any](
 			if err != nil {
 				return nil, err
 			}
-			berr := n.Build(foundContext, currentKey, node, foundIndex)
+			var berr error
+			n, berr = n.Build(foundContext, currentKey, node, foundIndex)
 			if berr != nil {
 				return nil, berr
 			}
@@ -757,7 +759,8 @@ func ExtractMapExtensions[PT Buildable[N], N any](
 			var n PT = new(N)
 			en = utils.NodeAlias(en)
 			_ = BuildModel(en, n)
-			err := n.Build(sCtx, input.label, en, sIdx)
+			var err error
+			n, err = n.Build(sCtx, input.label, en, sIdx)
 			if err != nil {
 				return mappingResult[PT]{}, err
 			}
@@ -922,10 +925,10 @@ func FromReferenceMap[K comparable, V any](refMap *orderedmap.Map[KeyReference[K
 }
 
 // FromReferenceMapWithFunc will convert a *orderedmap.Map[KeyReference[K], ValueReference[V]] to a *orderedmap.Map[K, VOut] using a transform function
-func FromReferenceMapWithFunc[K comparable, V any, VOut any](refMap *orderedmap.Map[KeyReference[K], ValueReference[V]], transform func(v V) VOut) *orderedmap.Map[K, VOut] {
+func FromReferenceMapWithFunc[K comparable, V any, VOut any](refMap *orderedmap.Map[KeyReference[K], ValueReference[V]], transform func(v V, idx *index.SpecIndex) VOut, idx *index.SpecIndex) *orderedmap.Map[K, VOut] {
 	om := orderedmap.New[K, VOut]()
 	for k, v := range refMap.FromOldest() {
-		om.Set(k.Value, transform(v.Value))
+		om.Set(k.Value, transform(v.Value, idx))
 	}
 	return om
 }

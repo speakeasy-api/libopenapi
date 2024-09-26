@@ -10,6 +10,7 @@ import (
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/datamodel/low/base"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -33,7 +34,7 @@ type Header struct {
 }
 
 // NewHeader creates a new high-level Header instance from a low-level one.
-func NewHeader(header *lowv3.Header) *Header {
+func NewHeader(header *lowv3.Header, idx *index.SpecIndex) *Header {
 	h := new(Header)
 	h.low = header
 	h.Description = header.Description.Value
@@ -48,11 +49,11 @@ func NewHeader(header *lowv3.Header) *Header {
 			Value:     header.Schema.Value,
 			KeyNode:   header.Schema.KeyNode,
 			ValueNode: header.Schema.ValueNode,
-		})
+		}, idx)
 	}
-	h.Content = ExtractContent(header.Content.Value)
+	h.Content = ExtractContent(header.Content.Value, idx)
 	h.Example = header.Example.Value
-	h.Examples = highbase.ExtractExamples(header.Examples.Value)
+	h.Examples = highbase.ExtractExamples(header.Examples.Value, idx)
 	h.Extensions = high.ExtractExtensions(header.Extensions)
 	return h
 }
@@ -68,8 +69,8 @@ func (h *Header) GoLowUntyped() any {
 }
 
 // ExtractHeaders will extract a hard to navigate low-level Header map, into simple high-level one.
-func ExtractHeaders(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*lowv3.Header]]) *orderedmap.Map[string, *Header] {
-	return low.FromReferenceMapWithFunc(elements, NewHeader)
+func ExtractHeaders(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*lowv3.Header]], idx *index.SpecIndex) *orderedmap.Map[string, *Header] {
+	return low.FromReferenceMapWithFunc(elements, NewHeader, idx)
 }
 
 // Render will return a YAML representation of the Header object as a byte slice.

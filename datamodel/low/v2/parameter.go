@@ -97,20 +97,20 @@ func (p *Parameter) GetExtensions() *orderedmap.Map[low.KeyReference[string], lo
 }
 
 // Build will extract out extensions, schema, items and default value
-func (p *Parameter) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (p *Parameter) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Parameter, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	p.Extensions = low.ExtractExtensions(root)
 	sch, sErr := base.ExtractSchema(ctx, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	if sch != nil {
 		p.Schema = *sch
 	}
 	items, iErr := low.ExtractObject[*Items](ctx, ItemsLabel, root, idx)
 	if iErr != nil {
-		return iErr
+		return nil, iErr
 	}
 	p.Items = items
 
@@ -121,9 +121,8 @@ func (p *Parameter) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 			KeyNode:   ln,
 			ValueNode: vn,
 		}
-		return nil
 	}
-	return nil
+	return p, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Parameter object

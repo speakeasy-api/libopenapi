@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareExamplesV2(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: cure all`
 
@@ -27,8 +27,8 @@ func TestCompareExamplesV2(t *testing.T) {
 	var rDoc v2.Examples
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamplesV2(&lDoc, &rDoc)
 	assert.Equal(t, extChanges.TotalChanges(), 1)
@@ -41,7 +41,6 @@ func TestCompareExamplesV2(t *testing.T) {
 }
 
 func TestCompareExamplesV2_Add(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: magic herbs
 yummy: coffee`
@@ -55,8 +54,8 @@ yummy: coffee`
 	var rDoc v2.Examples
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamplesV2(&lDoc, &rDoc)
 	assert.Equal(t, extChanges.TotalChanges(), 1)
@@ -66,7 +65,6 @@ yummy: coffee`
 }
 
 func TestCompareExamplesV2_Remove(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: magic herbs
 yummy: coffee`
@@ -80,8 +78,8 @@ yummy: coffee`
 	var rDoc v2.Examples
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamplesV2(&rDoc, &lDoc)
 	assert.Equal(t, extChanges.TotalChanges(), 1)
@@ -91,7 +89,6 @@ yummy: coffee`
 }
 
 func TestCompareExamplesV2_Identical(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := left
 
@@ -104,8 +101,8 @@ func TestCompareExamplesV2_Identical(t *testing.T) {
 	var rDoc v2.Examples
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamplesV2(&rDoc, &lDoc)
 	assert.Nil(t, extChanges)

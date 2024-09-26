@@ -135,17 +135,17 @@ func NewSwaggerDocument(document *low.Swagger) *Swagger {
 		d.Produces = produces
 	}
 	if !document.Paths.IsEmpty() {
-		d.Paths = NewPaths(document.Paths.Value)
+		d.Paths = NewPaths(document.Paths.Value, document.Index)
 	}
 	if !document.Definitions.IsEmpty() {
-		d.Definitions = NewDefinitions(document.Definitions.Value)
+		d.Definitions = NewDefinitions(document.Definitions.Value, document.Index)
 	}
 	if !document.Parameters.IsEmpty() {
-		d.Parameters = NewParametersDefinitions(document.Parameters.Value)
+		d.Parameters = NewParametersDefinitions(document.Parameters.Value, document.Index)
 	}
 
 	if !document.Responses.IsEmpty() {
-		d.Responses = NewResponsesDefinitions(document.Responses.Value)
+		d.Responses = NewResponsesDefinitions(document.Responses.Value, document.Index)
 	}
 	if !document.SecurityDefinitions.IsEmpty() {
 		d.SecurityDefinitions = NewSecurityDefinitions(document.SecurityDefinitions.Value)

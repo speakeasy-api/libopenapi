@@ -193,9 +193,9 @@ func TestParameter_Examples(t *testing.T) {
 
 	var n v3.Parameter
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewParameter(&n)
+	r := NewParameter(&n, idx)
 
 	assert.Equal(t, 2, orderedmap.Len(r.Examples))
 }
@@ -214,9 +214,9 @@ func TestParameter_Examples_NotFromSchema(t *testing.T) {
 
 	var n v3.Parameter
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewParameter(&n)
+	r := NewParameter(&n, idx)
 
 	assert.Equal(t, 0, orderedmap.Len(r.Examples))
 }

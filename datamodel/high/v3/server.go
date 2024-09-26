@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -22,12 +23,12 @@ type Server struct {
 }
 
 // NewServer will create a new high-level Server instance from a low-level one.
-func NewServer(server *lowv3.Server) *Server {
+func NewServer(server *lowv3.Server, idx *index.SpecIndex) *Server {
 	s := new(Server)
 	s.low = server
 	s.Description = server.Description.Value
 	s.URL = server.URL.Value
-	s.Variables = low.FromReferenceMapWithFunc(server.Variables.Value, NewServerVariable)
+	s.Variables = low.FromReferenceMapWithFunc(server.Variables.Value, NewServerVariable, idx)
 	s.Extensions = high.ExtractExtensions(server.Extensions)
 	return s
 }

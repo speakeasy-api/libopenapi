@@ -25,7 +25,7 @@ func TestExternalDoc_FindExtension(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	var xFish string
@@ -50,7 +50,7 @@ x-b33f: princess`
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.Equal(t, "https://pb33f.io", n.URL.Value)
 	assert.Equal(t, "the ranch", n.Description.Value)
@@ -78,8 +78,8 @@ description: the ranch`
 	var rDoc ExternalDoc
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	assert.Equal(t, lDoc.Hash(), rDoc.Hash())
 	assert.Equal(t, 1, orderedmap.Len(lDoc.GetExtensions()))

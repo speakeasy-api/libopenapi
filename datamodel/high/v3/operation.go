@@ -8,6 +8,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -35,7 +36,7 @@ type Operation struct {
 }
 
 // NewOperation will create a new Operation instance from a low-level one.
-func NewOperation(operation *lowv3.Operation) *Operation {
+func NewOperation(operation *lowv3.Operation, idx *index.SpecIndex) *Operation {
 	o := new(Operation)
 	o.low = operation
 	var tags []string
@@ -57,15 +58,15 @@ func NewOperation(operation *lowv3.Operation) *Operation {
 	if !operation.Parameters.IsEmpty() {
 		params := make([]*Parameter, len(operation.Parameters.Value))
 		for i := range operation.Parameters.Value {
-			params[i] = NewParameter(operation.Parameters.Value[i].Value)
+			params[i] = NewParameter(operation.Parameters.Value[i].Value, idx)
 		}
 		o.Parameters = params
 	}
 	if !operation.RequestBody.IsEmpty() {
-		o.RequestBody = NewRequestBody(operation.RequestBody.Value)
+		o.RequestBody = NewRequestBody(operation.RequestBody.Value, idx)
 	}
 	if !operation.Responses.IsEmpty() {
-		o.Responses = NewResponses(operation.Responses.Value)
+		o.Responses = NewResponses(operation.Responses.Value, idx)
 	}
 	if !operation.Security.IsEmpty() {
 		var sec []*base.SecurityRequirement
@@ -80,12 +81,12 @@ func NewOperation(operation *lowv3.Operation) *Operation {
 	}
 	var servers []*Server
 	for i := range operation.Servers.Value {
-		servers = append(servers, NewServer(operation.Servers.Value[i].Value))
+		servers = append(servers, NewServer(operation.Servers.Value[i].Value, idx))
 	}
 	o.Servers = servers
 	o.Extensions = high.ExtractExtensions(operation.Extensions)
 	if !operation.Callbacks.IsEmpty() {
-		o.Callbacks = low.FromReferenceMapWithFunc(operation.Callbacks.Value, NewCallback)
+		o.Callbacks = low.FromReferenceMapWithFunc(operation.Callbacks.Value, NewCallback, idx)
 	}
 	return o
 }

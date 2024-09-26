@@ -35,7 +35,7 @@ x-linky: slinky
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.Nil(t, n.GetKeyNode())
@@ -76,7 +76,7 @@ server:
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -98,7 +98,7 @@ x-mcdonalds: bigmac`
 
 	var n Link
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `parameters:
   bacon: eggs
@@ -117,7 +117,7 @@ server:
 
 	var n2 Link
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())

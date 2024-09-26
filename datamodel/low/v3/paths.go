@@ -77,7 +77,7 @@ func (p *Paths) GetExtensions() *orderedmap.Map[low.KeyReference[string], low.Va
 }
 
 // Build will extract extensions and all PathItems. This happens asynchronously for speed.
-func (p *Paths) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (p *Paths) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Paths, error) {
 	root = utils.NodeAlias(root)
 	p.KeyNode = keyNode
 	p.RootNode = root
@@ -89,7 +89,7 @@ func (p *Paths) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.
 
 	pathsMap, err := extractPathItemsMap(ctx, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	p.PathItems = pathsMap
@@ -99,7 +99,7 @@ func (p *Paths) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.
 		v.Value.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 	}
 
-	return nil
+	return p, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the PathItem object
@@ -173,7 +173,7 @@ func extractPathItemsMap(ctx context.Context, root *yaml.Node, idx *index.SpecIn
 		wg.Done()
 	}()
 
-	err := datamodel.TranslatePipeline[buildInput, buildResult](in, out,
+	err := datamodel.TranslatePipeline(in, out,
 		func(value buildInput) (buildResult, error) {
 			pNode := value.pathNode
 			cNode := value.currentNode
@@ -197,12 +197,14 @@ func extractPathItemsMap(ctx context.Context, root *yaml.Node, idx *index.SpecIn
 
 			path := new(PathItem)
 			_ = low.BuildModel(pNode, path)
-			err := path.Build(foundContext, cNode, pNode, idx)
+			p, err := path.Build(foundContext, cNode, pNode, idx)
 			if err != nil {
 				if idx != nil && idx.GetLogger() != nil {
 					idx.GetLogger().Error(fmt.Sprintf("error building path item: %s", err.Error()))
 				}
 				// return buildResult{}, err
+			} else {
+				path = p
 			}
 
 			return buildResult{

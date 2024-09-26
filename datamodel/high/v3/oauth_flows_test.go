@@ -44,7 +44,7 @@ clientCredentials:
 
 	var n v3.OAuthFlows
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	r := NewOAuthFlows(&n)
 

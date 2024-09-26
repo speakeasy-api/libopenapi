@@ -54,13 +54,13 @@ func (h *Header) GetExtensions() *orderedmap.Map[low.KeyReference[string], low.V
 }
 
 // Build will build out items, extensions and default value from the supplied node.
-func (h *Header) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (h *Header) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Header, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	h.Extensions = low.ExtractExtensions(root)
 	items, err := low.ExtractObject[*Items](ctx, ItemsLabel, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	h.Items = items
 
@@ -71,10 +71,9 @@ func (h *Header) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecI
 			KeyNode:   ln,
 			ValueNode: vn,
 		}
-		return nil
 	}
 
-	return nil
+	return h, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Header object

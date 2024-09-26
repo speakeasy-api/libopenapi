@@ -6,11 +6,12 @@ package base
 import (
 	"context"
 	"crypto/sha256"
+	"strings"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
-	"strings"
 )
 
 // Contact represents a low-level representation of the Contact definitions found at
@@ -28,13 +29,13 @@ type Contact struct {
 	low.NodeMap
 }
 
-func (c *Contact) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) error {
+func (c *Contact) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) (*Contact, error) {
 	c.KeyNode = keyNode
 	c.RootNode = root
 	c.Reference = new(low.Reference)
 	c.Nodes = low.ExtractNodes(ctx, root)
 	c.Extensions = low.ExtractExtensions(root)
-	return nil
+	return c, nil
 }
 
 // GetRootNode will return the root yaml node of the Contact object

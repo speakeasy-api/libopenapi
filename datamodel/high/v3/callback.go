@@ -9,6 +9,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"github.com/pb33f/libopenapi/utils"
 	"gopkg.in/yaml.v3"
@@ -28,10 +29,10 @@ type Callback struct {
 }
 
 // NewCallback creates a new high-level callback from a low-level one.
-func NewCallback(lowCallback *lowv3.Callback) *Callback {
+func NewCallback(lowCallback *lowv3.Callback, idx *index.SpecIndex) *Callback {
 	n := new(Callback)
 	n.low = lowCallback
-	n.Expression = low.FromReferenceMapWithFunc(lowCallback.Expression, NewPathItem)
+	n.Expression = low.FromReferenceMapWithFunc(lowCallback.Expression, NewPathItem, idx)
 	n.Extensions = high.ExtractExtensions(lowCallback.Extensions)
 	return n
 }

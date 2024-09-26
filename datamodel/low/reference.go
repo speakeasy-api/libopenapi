@@ -55,7 +55,7 @@ type SetReferencer interface {
 //
 // Used by generic functions when automatically building out structs based on yaml.Node inputs.
 type Buildable[T any] interface {
-	Build(ctx context.Context, key, value *yaml.Node, idx *index.SpecIndex) error
+	Build(ctx context.Context, key, value *yaml.Node, idx *index.SpecIndex) (*T, error)
 	*T
 }
 

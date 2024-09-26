@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareLicense_URLAdded(t *testing.T) {
-
 	left := `name: buckaroo`
 
 	right := `name: buckaroo
@@ -28,8 +28,8 @@ url: https://pb33f.io`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
@@ -37,11 +37,9 @@ url: https://pb33f.io`
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, PropertyAdded, extChanges.Changes[0].ChangeType)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
-
 }
 
 func TestCompareLicense_URLRemoved(t *testing.T) {
-
 	left := `name: buckaroo
 url: https://pb33f.io`
 
@@ -56,19 +54,17 @@ url: https://pb33f.io`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, PropertyRemoved, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareLicense_NameAdded(t *testing.T) {
-
 	left := `url: https://pb33f.io`
 
 	right := `url: https://pb33f.io
@@ -83,19 +79,17 @@ name: buckaroo`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, PropertyAdded, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareLicense_NameRemoved(t *testing.T) {
-
 	left := `url: https://pb33f.io`
 
 	right := `url: https://pb33f.io
@@ -110,19 +104,17 @@ name: buckaroo`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, PropertyAdded, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareLicense_URLModified(t *testing.T) {
-
 	left := `url: https://pb33f.io`
 
 	right := `url: https://pb33f.io/new`
@@ -136,19 +128,17 @@ func TestCompareLicense_URLModified(t *testing.T) {
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, Modified, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareLicense_URLModifiedAndMoved(t *testing.T) {
-
 	left := `name: buckaroo
 url: https://pb33f.io`
 
@@ -163,8 +153,8 @@ url: https://pb33f.io`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)
@@ -175,7 +165,6 @@ url: https://pb33f.io`
 }
 
 func TestCompareLicense_Identical(t *testing.T) {
-
 	left := `name: buckaroo
 url: https://pb33f.io`
 
@@ -191,8 +180,8 @@ url: https://pb33f.io`
 	var rDoc lowbase.License
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLicense(&lDoc, &rDoc)

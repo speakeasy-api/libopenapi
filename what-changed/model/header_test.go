@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func test_buildUltraGlobOfHeaders() string {
-
 	// this is a mega glob of every header item in both swagger and openapi. the versioned models will
 	// pick out the relevant bits required when parsing.
 	return `description: header desc
@@ -60,7 +60,6 @@ x-beer: yummy`
 }
 
 func TestCompareHeaders_v2_identical(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := left
@@ -74,8 +73,8 @@ func TestCompareHeaders_v2_identical(t *testing.T) {
 	var rDoc v2.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV2(&lDoc, &rDoc)
@@ -83,7 +82,6 @@ func TestCompareHeaders_v2_identical(t *testing.T) {
 }
 
 func TestCompareHeaders_v2_modified(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := `description: header desc
@@ -117,8 +115,8 @@ x-beer: really yummy`
 	var rDoc v2.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV2(&lDoc, &rDoc)
@@ -129,7 +127,6 @@ x-beer: really yummy`
 }
 
 func TestCompareHeaders_v2_addedItems(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := `description: header desc
@@ -161,8 +158,8 @@ x-beer: yummy`
 	var rDoc v2.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV2(&rDoc, &lDoc)
@@ -174,7 +171,6 @@ x-beer: yummy`
 }
 
 func TestCompareHeaders_v2_removedItems(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := `description: header desc
@@ -206,8 +202,8 @@ x-beer: yummy`
 	var rDoc v2.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV2(&lDoc, &rDoc)
@@ -219,7 +215,6 @@ x-beer: yummy`
 }
 
 func TestCompareHeaders_v2_ItemsModified(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := left
@@ -233,8 +228,8 @@ func TestCompareHeaders_v2_ItemsModified(t *testing.T) {
 	var rDoc v2.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV2(&lDoc, &rDoc)
@@ -242,7 +237,6 @@ func TestCompareHeaders_v2_ItemsModified(t *testing.T) {
 }
 
 func TestCompareHeaders_v3_identical(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := left
@@ -256,8 +250,8 @@ func TestCompareHeaders_v3_identical(t *testing.T) {
 	var rDoc v3.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV3(&lDoc, &rDoc)
@@ -265,7 +259,6 @@ func TestCompareHeaders_v3_identical(t *testing.T) {
 }
 
 func TestCompareHeaders_v3_modified(t *testing.T) {
-
 	left := test_buildUltraGlobOfHeaders()
 
 	right := `required: true
@@ -298,8 +291,8 @@ x-beer: yummy`
 	var rDoc v3.Header
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareHeadersV3(&lDoc, &rDoc)
@@ -307,5 +300,4 @@ x-beer: yummy`
 	assert.Equal(t, 5, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 5)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
-
 }

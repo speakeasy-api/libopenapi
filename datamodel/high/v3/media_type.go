@@ -9,6 +9,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -27,16 +28,16 @@ type MediaType struct {
 }
 
 // NewMediaType will create a new high-level MediaType instance from a low-level one.
-func NewMediaType(mediaType *low.MediaType) *MediaType {
+func NewMediaType(mediaType *low.MediaType, idx *index.SpecIndex) *MediaType {
 	m := new(MediaType)
 	m.low = mediaType
 	if !mediaType.Schema.IsEmpty() {
-		m.Schema = base.NewSchemaProxy(&mediaType.Schema)
+		m.Schema = base.NewSchemaProxy(&mediaType.Schema, idx)
 	}
 	m.Example = mediaType.Example.Value
-	m.Examples = base.ExtractExamples(mediaType.Examples.Value)
+	m.Examples = base.ExtractExamples(mediaType.Examples.Value, idx)
 	m.Extensions = high.ExtractExtensions(mediaType.Extensions)
-	m.Encoding = ExtractEncoding(mediaType.Encoding.Value)
+	m.Encoding = ExtractEncoding(mediaType.Encoding.Value, idx)
 	return m
 }
 
@@ -74,12 +75,12 @@ func (m *MediaType) MarshalYAMLInline() (interface{}, error) {
 
 // ExtractContent takes in a complex and hard to navigate low-level content map, and converts it in to a much simpler
 // and easier to navigate high-level one.
-func ExtractContent(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*low.MediaType]]) *orderedmap.Map[string, *MediaType] {
+func ExtractContent(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*low.MediaType]], idx *index.SpecIndex) *orderedmap.Map[string, *MediaType] {
 	extracted := orderedmap.New[string, *MediaType]()
 	translateFunc := func(pair orderedmap.Pair[lowmodel.KeyReference[string], lowmodel.ValueReference[*low.MediaType]]) (asyncResult[*MediaType], error) {
 		return asyncResult[*MediaType]{
 			key:    pair.Key().Value,
-			result: NewMediaType(pair.Value().Value),
+			result: NewMediaType(pair.Value().Value, idx),
 		}, nil
 	}
 	resultFunc := func(value asyncResult[*MediaType]) error {

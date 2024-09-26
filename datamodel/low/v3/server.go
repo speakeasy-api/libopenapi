@@ -44,7 +44,7 @@ func (s *Server) FindVariable(serverVar string) *low.ValueReference[*ServerVaria
 }
 
 // Build will extract server variables from the supplied node.
-func (s *Server) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) error {
+func (s *Server) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) (*Server, error) {
 	s.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	s.RootNode = root
@@ -56,7 +56,7 @@ func (s *Server) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.S
 
 	kn, vars := utils.FindKeyNode(VariablesLabel, root.Content)
 	if vars == nil {
-		return nil
+		return s, nil
 	}
 	variablesMap := orderedmap.New[low.KeyReference[string], low.ValueReference[*ServerVariable]]()
 	if utils.IsNodeMap(vars) {
@@ -95,7 +95,7 @@ func (s *Server) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.S
 			Value:     variablesMap,
 		}
 	}
-	return nil
+	return s, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Server object

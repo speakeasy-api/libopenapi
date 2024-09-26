@@ -72,7 +72,7 @@ func (o *Operation) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract external docs, parameters, request body, responses, callbacks, security and servers.
-func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Operation, error) {
 	o.KeyNode = keyNode
 	o.RootNode = root
 	root = utils.NodeAlias(root)
@@ -85,14 +85,14 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// extract externalDocs
 	extDocs, dErr := low.ExtractObject[*base.ExternalDoc](ctx, base.ExternalDocsLabel, root, idx)
 	if dErr != nil {
-		return dErr
+		return nil, dErr
 	}
 	o.ExternalDocs = extDocs
 
 	// extract parameters
 	params, ln, vn, pErr := low.ExtractArray[*Parameter](ctx, ParametersLabel, root, idx)
 	if pErr != nil {
-		return pErr
+		return nil, pErr
 	}
 	if params != nil {
 		o.Parameters = low.NodeReference[[]low.ValueReference[*Parameter]]{
@@ -106,7 +106,7 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// extract request body
 	rBody, rErr := low.ExtractObject[*RequestBody](ctx, RequestBodyLabel, root, idx)
 	if rErr != nil {
-		return rErr
+		return nil, rErr
 	}
 	o.RequestBody = rBody
 
@@ -124,14 +124,14 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// extract responses
 	respBody, respErr := low.ExtractObject[*Responses](ctx, ResponsesLabel, root, idx)
 	if respErr != nil {
-		return respErr
+		return nil, respErr
 	}
 	o.Responses = respBody
 
 	// extract callbacks
 	callbacks, cbL, cbN, cbErr := low.ExtractMap[*Callback](ctx, CallbacksLabel, root, idx)
 	if cbErr != nil {
-		return cbErr
+		return nil, cbErr
 	}
 	if callbacks != nil {
 		o.Callbacks = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Callback]]]{
@@ -148,7 +148,7 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// extract security
 	sec, sln, svn, sErr := low.ExtractArray[*base.SecurityRequirement](ctx, SecurityLabel, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 
 	// if security is defined and requirements are provided.
@@ -175,7 +175,7 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	// extract servers
 	servers, sl, sn, serErr := low.ExtractArray[*Server](ctx, ServersLabel, root, idx)
 	if serErr != nil {
-		return serErr
+		return nil, serErr
 	}
 	if servers != nil {
 		o.Servers = low.NodeReference[[]low.ValueReference[*Server]]{
@@ -185,7 +185,7 @@ func (o *Operation) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 		}
 		o.Nodes.Store(sl.Line, sl)
 	}
-	return nil
+	return o, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Operation object

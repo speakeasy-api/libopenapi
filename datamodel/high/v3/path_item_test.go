@@ -29,9 +29,9 @@ func TestPathItem(t *testing.T) {
 
 	var n lowV3.PathItem
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewPathItem(&n)
+	r := NewPathItem(&n, idx)
 
 	assert.Len(t, r.Servers, 1)
 	assert.Equal(t, "so many options for things in places.", r.Servers[0].Description)
@@ -63,9 +63,9 @@ trace:
 
 	var n lowV3.PathItem
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewPathItem(&n)
+	r := NewPathItem(&n, idx)
 
 	assert.Equal(t, 8, r.GetOperations().Len())
 

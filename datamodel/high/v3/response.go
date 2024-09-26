@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -26,19 +27,19 @@ type Response struct {
 }
 
 // NewResponse creates a new high-level Response object that is backed by a low-level one.
-func NewResponse(response *lowv3.Response) *Response {
+func NewResponse(response *lowv3.Response, idx *index.SpecIndex) *Response {
 	r := new(Response)
 	r.low = response
 	r.Description = response.Description.Value
 	if !response.Headers.IsEmpty() {
-		r.Headers = ExtractHeaders(response.Headers.Value)
+		r.Headers = ExtractHeaders(response.Headers.Value, idx)
 	}
 	r.Extensions = high.ExtractExtensions(response.Extensions)
 	if !response.Content.IsEmpty() {
-		r.Content = ExtractContent(response.Content.Value)
+		r.Content = ExtractContent(response.Content.Value, idx)
 	}
 	if !response.Links.IsEmpty() {
-		r.Links = low.FromReferenceMapWithFunc(response.Links.Value, NewLink)
+		r.Links = low.FromReferenceMapWithFunc(response.Links.Value, NewLink, idx)
 	}
 	return r
 }
