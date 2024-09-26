@@ -6,6 +6,7 @@ package v2
 import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -37,7 +38,7 @@ type Header struct {
 }
 
 // NewHeader will create a new high-level Swagger / OpenAPI 2 Header instance, from a low-level one.
-func NewHeader(header *low.Header) *Header {
+func NewHeader(header *low.Header, idx *index.SpecIndex) *Header {
 	h := new(Header)
 	h.low = header
 	h.Extensions = high.ExtractExtensions(header.Extensions)

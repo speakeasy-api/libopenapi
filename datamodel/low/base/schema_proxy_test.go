@@ -26,7 +26,7 @@ description: something`
 
 	ctx := context.WithValue(context.Background(), "key", "value")
 
-	err := sch.Build(ctx, &idxNode, idxNode.Content[0], nil)
+	_, err := sch.Build(ctx, &idxNode, idxNode.Content[0], nil)
 	assert.NoError(t, err)
 	assert.Equal(t, "value", sch.GetContext().Value("key"))
 
@@ -55,7 +55,7 @@ func TestSchemaProxy_Build_CheckRef(t *testing.T) {
 	var idxNode yaml.Node
 	_ = yaml.Unmarshal([]byte(yml), &idxNode)
 
-	err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
 	assert.NoError(t, err)
 	assert.True(t, sch.IsReference())
 	assert.Equal(t, "wat", sch.GetReference())
@@ -70,7 +70,7 @@ func TestSchemaProxy_Build_HashInline(t *testing.T) {
 	var idxNode yaml.Node
 	_ = yaml.Unmarshal([]byte(yml), &idxNode)
 
-	err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
 	assert.NoError(t, err)
 	assert.False(t, sch.IsReference())
 	assert.NotNil(t, sch.Schema())
@@ -91,7 +91,7 @@ x-common-definitions:
 	var idxNode yaml.Node
 	_ = yaml.Unmarshal([]byte(yml), &idxNode)
 
-	err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
 	assert.NoError(t, err)
 	assert.Len(t, sch.Schema().Enum.Value, 3)
 	assert.Equal(t, "The type of life cycle", sch.Schema().Description.Value)
@@ -126,9 +126,9 @@ properties:
 	rolo.SetRootNode(&idxNodeA)
 	_ = rolo.IndexTheRolodex()
 
-	err := schA.Build(context.Background(), nil, idxNodeA.Content[0], rolo.GetRootIndex())
+	_, err := schA.Build(context.Background(), nil, idxNodeA.Content[0], rolo.GetRootIndex())
 	assert.NoError(t, err)
-	err = schB.Build(context.Background(), nil, idxNodeB.Content[0].Content[3].Content[1], rolo.GetRootIndex())
+	_, err = schB.Build(context.Background(), nil, idxNodeB.Content[0].Content[3].Content[1], rolo.GetRootIndex())
 	assert.NoError(t, err)
 
 	rolo.GetRootIndex().SetAbsolutePath("/rooty/rootster")
@@ -154,14 +154,13 @@ properties:
 	assert.Equal(t, "/boaty/mcboatface", origin.AbsoluteLocation)
 
 	// do it again, but with no index
-	err = schC.Build(context.Background(), nil, idxNodeA.Content[0], nil)
+	_, err = schC.Build(context.Background(), nil, idxNodeA.Content[0], nil)
 	assert.NoError(t, err)
 	origin = schC.GetSchemaReferenceLocation()
 	assert.Nil(t, origin)
 }
 
 func TestSchemaProxy_Build_HashFail(t *testing.T) {
-
 	sp := new(SchemaProxy)
 	logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelError}))
 	idx := index.NewSpecIndexWithConfig(nil, &index.SpecIndexConfig{Logger: logger})
@@ -178,7 +177,7 @@ description: cakes`
 	var idxNode yaml.Node
 	_ = yaml.Unmarshal([]byte(yml), &idxNode)
 
-	err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, err := sch.Build(context.Background(), nil, idxNode.Content[0], nil)
 	assert.NoError(t, err)
 
 	n, f := sch.Nodes.Load(3)
@@ -196,5 +195,4 @@ description: cakes`
 	n, f = s.Nodes.Load(4)
 	assert.True(t, f)
 	assert.NotNil(t, n)
-
 }

@@ -34,14 +34,14 @@ type XML struct {
 }
 
 // Build will extract extensions from the XML instance.
-func (x *XML) Build(root *yaml.Node, _ *index.SpecIndex) error {
+func (x *XML) Build(root *yaml.Node, _ *index.SpecIndex) (*XML, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	x.RootNode = root
 	x.Reference = new(low.Reference)
 	x.Nodes = low.ExtractNodes(nil, root)
 	x.Extensions = low.ExtractExtensions(root)
-	return nil
+	return x, nil
 }
 
 // GetExtensions returns all Tag extensions and satisfies the low.HasExtensions interface.

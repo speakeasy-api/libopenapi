@@ -12,6 +12,7 @@ import (
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/datamodel/low/base"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -39,7 +40,7 @@ type Components struct {
 // NewComponents will create new high-level instance of Components from a low-level one. Components can be considerable
 // in scope, with a lot of different properties across different categories. All components are built asynchronously
 // in order to keep things fast.
-func NewComponents(comp *low.Components) *Components {
+func NewComponents(comp *low.Components, idx *index.SpecIndex) *Components {
 	c := new(Components)
 	c.low = comp
 	if orderedmap.Len(comp.Extensions) > 0 {
@@ -60,43 +61,43 @@ func NewComponents(comp *low.Components) *Components {
 	var wg sync.WaitGroup
 	wg.Add(10)
 	go func() {
-		buildComponent[*low.Callback, *Callback](comp.Callbacks.Value, cbMap, NewCallback)
+		buildComponent[*low.Callback, *Callback](comp.Callbacks.Value, cbMap, NewCallback, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.Link, *Link](comp.Links.Value, linkMap, NewLink)
+		buildComponent[*low.Link, *Link](comp.Links.Value, linkMap, NewLink, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.Response, *Response](comp.Responses.Value, responseMap, NewResponse)
+		buildComponent[*low.Response, *Response](comp.Responses.Value, responseMap, NewResponse, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.Parameter, *Parameter](comp.Parameters.Value, parameterMap, NewParameter)
+		buildComponent[*low.Parameter, *Parameter](comp.Parameters.Value, parameterMap, NewParameter, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*base.Example, *highbase.Example](comp.Examples.Value, exampleMap, highbase.NewExample)
+		buildComponent[*base.Example, *highbase.Example](comp.Examples.Value, exampleMap, highbase.NewExample, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.RequestBody, *RequestBody](comp.RequestBodies.Value, requestBodyMap, NewRequestBody)
+		buildComponent[*low.RequestBody, *RequestBody](comp.RequestBodies.Value, requestBodyMap, NewRequestBody, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.Header, *Header](comp.Headers.Value, headerMap, NewHeader)
+		buildComponent[*low.Header, *Header](comp.Headers.Value, headerMap, NewHeader, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.PathItem, *PathItem](comp.PathItems.Value, pathItemMap, NewPathItem)
+		buildComponent[*low.PathItem, *PathItem](comp.PathItems.Value, pathItemMap, NewPathItem, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildComponent[*low.SecurityScheme, *SecurityScheme](comp.SecuritySchemes.Value, securitySchemeMap, NewSecurityScheme)
+		buildComponent[*low.SecurityScheme, *SecurityScheme](comp.SecuritySchemes.Value, securitySchemeMap, NewSecurityScheme, idx)
 		wg.Done()
 	}()
 	go func() {
-		buildSchema(comp.Schemas.Value, schemas)
+		buildSchema(comp.Schemas.Value, schemas, idx)
 		wg.Done()
 	}()
 
@@ -121,9 +122,9 @@ type componentResult[T any] struct {
 }
 
 // buildComponent builds component structs from low level structs.
-func buildComponent[IN any, OUT any](inMap *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[IN]], outMap *orderedmap.Map[string, OUT], translateItem func(IN) OUT) {
+func buildComponent[IN any, OUT any](inMap *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[IN]], outMap *orderedmap.Map[string, OUT], translateItem func(in IN, idx *index.SpecIndex) OUT, idx *index.SpecIndex) {
 	translateFunc := func(pair orderedmap.Pair[lowmodel.KeyReference[string], lowmodel.ValueReference[IN]]) (componentResult[OUT], error) {
-		return componentResult[OUT]{key: pair.Key().Value, res: translateItem(pair.Value().Value)}, nil
+		return componentResult[OUT]{key: pair.Key().Value, res: translateItem(pair.Value().Value, idx)}, nil
 	}
 	resultFunc := func(value componentResult[OUT]) error {
 		outMap.Set(value.key, value.res)
@@ -133,13 +134,13 @@ func buildComponent[IN any, OUT any](inMap *orderedmap.Map[lowmodel.KeyReference
 }
 
 // buildSchema builds a schema from low level structs.
-func buildSchema(inMap *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*base.SchemaProxy]], outMap *orderedmap.Map[string, *highbase.SchemaProxy]) {
+func buildSchema(inMap *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*base.SchemaProxy]], outMap *orderedmap.Map[string, *highbase.SchemaProxy], idx *index.SpecIndex) {
 	translateFunc := func(pair orderedmap.Pair[lowmodel.KeyReference[string], lowmodel.ValueReference[*base.SchemaProxy]]) (componentResult[*highbase.SchemaProxy], error) {
 		value := pair.Value()
 		sch := highbase.NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			Value:     value.Value,
 			ValueNode: value.ValueNode,
-		})
+		}, idx)
 		return componentResult[*highbase.SchemaProxy]{res: sch, key: pair.Key().Value}, nil
 	}
 	resultFunc := func(value componentResult[*highbase.SchemaProxy]) error {

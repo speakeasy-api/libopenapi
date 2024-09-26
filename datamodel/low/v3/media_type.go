@@ -69,7 +69,7 @@ func (mt *MediaType) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract examples, extensions, schema and encoding from node.
-func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*MediaType, error) {
 	mt.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	mt.RootNode = root
@@ -94,7 +94,7 @@ func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *i
 	// handle schema
 	sch, sErr := base.ExtractSchema(ctx, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	if sch != nil {
 		mt.Schema = *sch
@@ -103,7 +103,7 @@ func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *i
 	// handle examples if set.
 	exps, expsL, expsN, eErr := low.ExtractMap[*base.Example](ctx, base.ExamplesLabel, root, idx)
 	if eErr != nil {
-		return eErr
+		return nil, eErr
 	}
 	if exps != nil && slices.Contains(root.Content, expsL) {
 		mt.Nodes.Store(expsL.Line, expsL)
@@ -121,7 +121,7 @@ func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *i
 	// handle encoding
 	encs, encsL, encsN, encErr := low.ExtractMap[*Encoding](ctx, EncodingLabel, root, idx)
 	if encErr != nil {
-		return encErr
+		return nil, encErr
 	}
 	if encs != nil {
 		mt.Encoding = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Encoding]]]{
@@ -134,7 +134,7 @@ func (mt *MediaType) Build(ctx context.Context, keyNode, root *yaml.Node, idx *i
 			v.Value.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 		}
 	}
-	return nil
+	return mt, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the MediaType object

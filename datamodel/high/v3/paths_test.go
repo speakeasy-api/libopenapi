@@ -16,7 +16,6 @@ import (
 )
 
 func TestPaths_MarshalYAML(t *testing.T) {
-
 	yml := `/foo/bar/bizzle:
     get:
         description: get a bizzle
@@ -38,10 +37,10 @@ func TestPaths_MarshalYAML(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
-	high := NewPaths(&n)
+	high := NewPaths(&n, idx)
 	assert.NotNil(t, high)
 
 	rend, _ := high.Render()
@@ -64,11 +63,9 @@ func TestPaths_MarshalYAML(t *testing.T) {
 
 	rend, _ = high.Render()
 	assert.Equal(t, yml, strings.TrimSpace(string(rend)))
-
 }
 
 func TestPaths_MarshalYAMLInline(t *testing.T) {
-
 	yml := `/foo/bar/bizzle:
     get:
         description: get a bizzle
@@ -90,10 +87,10 @@ func TestPaths_MarshalYAMLInline(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
-	high := NewPaths(&n)
+	high := NewPaths(&n, idx)
 	assert.NotNil(t, high)
 
 	rend, _ := high.RenderInline()
@@ -116,5 +113,4 @@ func TestPaths_MarshalYAMLInline(t *testing.T) {
 
 	rend, _ = high.RenderInline()
 	assert.Equal(t, yml, strings.TrimSpace(string(rend)))
-
 }

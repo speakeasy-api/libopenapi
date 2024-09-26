@@ -56,8 +56,38 @@ type SchemaProxy struct {
 }
 
 // NewSchemaProxy creates a new high-level SchemaProxy from a low-level one.
-func NewSchemaProxy(schema *low.NodeReference[*base.SchemaProxy]) *SchemaProxy {
-	return &SchemaProxy{schema: schema, lock: &sync.Mutex{}}
+func NewSchemaProxy(schema *low.NodeReference[*base.SchemaProxy], idx *index.SpecIndex) *SchemaProxy {
+	var sp *SchemaProxy
+
+	cache := false
+
+	var ref string
+	if schema != nil && schema.Value != nil {
+		ref = schema.Value.GetReference()
+		refNode := schema.Value.GetReferenceNode()
+
+		cache = ref != "" && refNode != nil && idx != nil
+		// If we see more than 2 nodes in the content of the refNode then it is a schema that is a $ref alongside other nodes and can't be cached as easily so don't for now
+		cache = cache && len(refNode.Content) == 2
+
+		if cache {
+			spA, ok := idx.GetHighSchemaProxyCache().Load(schema.Value.GetReference())
+			if ok {
+				s, ok := spA.(*SchemaProxy)
+				if ok {
+					sp = s
+				}
+			}
+		}
+	}
+	if sp == nil {
+		sp = &SchemaProxy{schema: schema, lock: &sync.Mutex{}}
+	}
+	if cache {
+		idx.GetHighSchemaProxyCache().Store(schema.Value.GetReference(), sp)
+	}
+
+	return sp
 }
 
 // CreateSchemaProxy will create a new high-level SchemaProxy from a high-level Schema, this acts the same
@@ -84,28 +114,26 @@ func (sp *SchemaProxy) GetValueNode() *yaml.Node {
 // If there is a problem building the Schema, then this method will return nil. Use GetBuildError to gain access
 // to that building error.
 func (sp *SchemaProxy) Schema() *Schema {
-	if sp == nil || sp.lock == nil {
+	if sp == nil || sp.lock == nil || sp.buildError != nil {
 		return nil
 	}
+
 	sp.lock.Lock()
-	if sp.rendered == nil {
-
-		s := sp.schema.Value.Schema()
-		if s == nil {
-			sp.buildError = sp.schema.Value.GetBuildError()
-			sp.lock.Unlock()
-			return nil
-		}
-		sch := NewSchema(s)
-		sch.ParentProxy = sp
-
-		sp.rendered = sch
-		sp.lock.Unlock()
-		return sch
-	} else {
-		sp.lock.Unlock()
+	defer sp.lock.Unlock()
+	if sp.rendered != nil {
 		return sp.rendered
 	}
+
+	s := sp.schema.Value.Schema()
+	if s == nil {
+		sp.buildError = sp.schema.Value.GetBuildError()
+		return nil
+	}
+	sch := NewSchema(s, s.Index)
+	sch.ParentProxy = sp
+
+	sp.rendered = sch
+	return sp.rendered
 }
 
 // IsReference returns true if the SchemaProxy is a reference to another Schema.
@@ -156,12 +184,13 @@ func (sp *SchemaProxy) GetReferenceOrigin() *index.NodeOrigin {
 
 // BuildSchema operates the same way as Schema, except it will return any error along with the *Schema
 func (sp *SchemaProxy) BuildSchema() (*Schema, error) {
-	if sp.rendered != nil {
-		return sp.rendered, sp.buildError
+	s := sp.Schema()
+
+	if sp.buildError != nil {
+		return nil, sp.buildError
 	}
-	schema := sp.Schema()
-	er := sp.buildError
-	return schema, er
+
+	return s, nil
 }
 
 // GetBuildError returns any error that was thrown when calling Schema()
@@ -217,6 +246,9 @@ func (sp *SchemaProxy) MarshalYAMLInline() (interface{}, error) {
 	var s *Schema
 	var err error
 	s, err = sp.BuildSchema()
+	if err != nil {
+		return nil, err
+	}
 
 	if s != nil && s.GoLow() != nil && s.GoLow().Index != nil {
 		circ := s.GoLow().Index.GetCircularReferences()
@@ -230,9 +262,6 @@ func (sp *SchemaProxy) MarshalYAMLInline() (interface{}, error) {
 		}
 	}
 
-	if err != nil {
-		return nil, err
-	}
 	nb := high.NewNodeBuilder(s, s.low)
 	nb.Resolve = true
 	return nb.Render(), nil

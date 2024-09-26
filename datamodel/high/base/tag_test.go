@@ -28,7 +28,7 @@ x-hack: code`
 
 	var lowTag lowbase.Tag
 	_ = lowmodel.BuildModel(cNode.Content[0], &lowTag)
-	_ = lowTag.Build(context.Background(), nil, cNode.Content[0], nil)
+	_, _ = lowTag.Build(context.Background(), nil, cNode.Content[0], nil)
 
 	highTag := NewTag(&lowTag)
 
@@ -76,7 +76,7 @@ x-hack: code`
 	// build out the low-level model
 	var lowTag lowbase.Tag
 	_ = lowmodel.BuildModel(node.Content[0], &lowTag)
-	_ = lowTag.Build(context.Background(), nil, node.Content[0], nil)
+	_, _ = lowTag.Build(context.Background(), nil, node.Content[0], nil)
 
 	// build the high level tag
 	highTag := NewTag(&lowTag)

@@ -5,16 +5,16 @@ package base
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"strings"
-	"testing"
 )
 
 func ExampleNewXML() {
-
 	// create an example schema object
 	// this can be either JSON or YAML.
 	yml := `
@@ -31,7 +31,7 @@ wrapped: true`
 	// build out the low-level model
 	var lowXML lowbase.XML
 	_ = lowmodel.BuildModel(node.Content[0], &lowXML)
-	_ = lowXML.Build(node.Content[0], nil)
+	_, _ = lowXML.Build(node.Content[0], nil)
 
 	// build the high level tag
 	highXML := NewXML(&lowXML)
@@ -42,7 +42,6 @@ wrapped: true`
 }
 
 func TestContact_Render(t *testing.T) {
-
 	// create an example schema object
 	// this can be either JSON or YAML.
 	yml := `namespace: https://pb33f.io/schema
@@ -58,7 +57,7 @@ wrapped: true`
 	// build out the low-level model
 	var lowXML lowbase.XML
 	_ = lowmodel.BuildModel(node.Content[0], &lowXML)
-	_ = lowXML.Build(node.Content[0], nil)
+	_, _ = lowXML.Build(node.Content[0], nil)
 
 	// build the high level tag
 	highXML := NewXML(&lowXML)
@@ -70,5 +69,4 @@ wrapped: true`
 	highXML.Attribute = false
 	highXMLBytes, _ = highXML.Render()
 	assert.NotEqual(t, yml, strings.TrimSpace(string(highXMLBytes)))
-
 }

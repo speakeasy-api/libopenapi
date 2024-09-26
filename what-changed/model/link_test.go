@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareLinks(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -33,17 +33,15 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
 	assert.Nil(t, extChanges)
-
 }
 
 func TestCompareLinks_ModifyExtension(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -71,8 +69,8 @@ x-cake: very tasty`
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
@@ -80,11 +78,9 @@ x-cake: very tasty`
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
 	assert.Equal(t, Modified, extChanges.ExtensionChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareLinks_ModifyServer(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -110,8 +106,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
@@ -122,7 +118,6 @@ parameters:
 }
 
 func TestCompareLinks_AddServer(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -146,8 +141,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
@@ -158,7 +153,6 @@ parameters:
 }
 
 func TestCompareLinks_RemoveServer(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -182,8 +176,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&rDoc, &lDoc)
@@ -194,7 +188,6 @@ parameters:
 }
 
 func TestCompareLinks_ModifyParam(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -220,8 +213,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
@@ -235,7 +228,6 @@ parameters:
 }
 
 func TestCompareLinks_AddParam(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -262,8 +254,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&lDoc, &rDoc)
@@ -276,7 +268,6 @@ parameters:
 }
 
 func TestCompareLinks_RemoveParam(t *testing.T) {
-
 	left := `operationId: someOperation
 requestBody: expression-says-what
 description: a nice link
@@ -303,8 +294,8 @@ parameters:
 	var rDoc v3.Link
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareLinks(&rDoc, &lDoc)

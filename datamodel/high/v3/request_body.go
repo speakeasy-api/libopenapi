@@ -6,6 +6,7 @@ package v3
 import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -21,7 +22,7 @@ type RequestBody struct {
 }
 
 // NewRequestBody will create a new high-level RequestBody instance, from a low-level one.
-func NewRequestBody(rb *low.RequestBody) *RequestBody {
+func NewRequestBody(rb *low.RequestBody, idx *index.SpecIndex) *RequestBody {
 	r := new(RequestBody)
 	r.low = rb
 	r.Description = rb.Description.Value
@@ -29,7 +30,7 @@ func NewRequestBody(rb *low.RequestBody) *RequestBody {
 		r.Required = &rb.Required.Value
 	}
 	r.Extensions = high.ExtractExtensions(rb.Extensions)
-	r.Content = ExtractContent(rb.Content.Value)
+	r.Content = ExtractContent(rb.Content.Value, idx)
 	return r
 }
 

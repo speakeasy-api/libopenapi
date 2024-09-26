@@ -29,7 +29,7 @@ func (r *Responses) GetExtensions() *orderedmap.Map[low.KeyReference[string], lo
 }
 
 // Build will extract default value and extensions from node.
-func (r *Responses) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (r *Responses) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Responses, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	r.Extensions = low.ExtractExtensions(root)
@@ -37,7 +37,7 @@ func (r *Responses) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 	if utils.IsNodeMap(root) {
 		codes, err := low.ExtractMapNoLookup[*Response](ctx, root, idx)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if codes != nil {
 			r.Codes = codes
@@ -50,10 +50,10 @@ func (r *Responses) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 			r.deleteCode(DefaultLabel)
 		}
 	} else {
-		return fmt.Errorf("responses build failed: vn node is not a map! line %d, col %d",
+		return nil, fmt.Errorf("responses build failed: vn node is not a map! line %d, col %d",
 			root.Line, root.Column)
 	}
-	return nil
+	return r, nil
 }
 
 func (r *Responses) getDefault() *low.NodeReference[*Response] {

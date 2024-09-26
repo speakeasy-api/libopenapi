@@ -9,6 +9,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowBase "github.com/pb33f/libopenapi/datamodel/low/base"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -26,7 +27,7 @@ type Example struct {
 }
 
 // NewExample will create a new instance of an Example, using a low-level Example.
-func NewExample(example *lowBase.Example) *Example {
+func NewExample(example *lowBase.Example, idx *index.SpecIndex) *Example {
 	e := new(Example)
 	e.low = example
 	e.Summary = example.Summary.Value
@@ -69,6 +70,6 @@ func (e *Example) MarshalJSON() ([]byte, error) {
 
 // ExtractExamples will convert a low-level example map, into a high level one that is simple to navigate.
 // no fidelity is lost, everything is still available via GoLow()
-func ExtractExamples(elements *orderedmap.Map[low.KeyReference[string], low.ValueReference[*lowBase.Example]]) *orderedmap.Map[string, *Example] {
-	return low.FromReferenceMapWithFunc(elements, NewExample)
+func ExtractExamples(elements *orderedmap.Map[low.KeyReference[string], low.ValueReference[*lowBase.Example]], idx *index.SpecIndex) *orderedmap.Map[string, *Example] {
+	return low.FromReferenceMapWithFunc(elements, NewExample, idx)
 }

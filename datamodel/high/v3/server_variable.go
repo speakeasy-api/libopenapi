@@ -6,6 +6,7 @@ package v3
 import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -23,7 +24,7 @@ type ServerVariable struct {
 }
 
 // NewServerVariable will return a new high-level instance of a ServerVariable from a low-level one.
-func NewServerVariable(variable *low.ServerVariable) *ServerVariable {
+func NewServerVariable(variable *low.ServerVariable, idx *index.SpecIndex) *ServerVariable {
 	v := new(ServerVariable)
 	v.low = variable
 	var enums []string

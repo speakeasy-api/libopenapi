@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel"
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 )
 
@@ -22,14 +23,14 @@ type ResponsesDefinitions struct {
 }
 
 // NewResponsesDefinitions will create a new high-level instance of ResponsesDefinitions from a low-level one.
-func NewResponsesDefinitions(responsesDefinitions *low.ResponsesDefinitions) *ResponsesDefinitions {
+func NewResponsesDefinitions(responsesDefinitions *low.ResponsesDefinitions, idx *index.SpecIndex) *ResponsesDefinitions {
 	rd := new(ResponsesDefinitions)
 	rd.low = responsesDefinitions
 	responses := orderedmap.New[string, *Response]()
 	translateFunc := func(pair orderedmap.Pair[lowmodel.KeyReference[string], lowmodel.ValueReference[*low.Response]]) (asyncResult[*Response], error) {
 		return asyncResult[*Response]{
 			key:    pair.Key().Value,
-			result: NewResponse(pair.Value().Value),
+			result: NewResponse(pair.Value().Value, idx),
 		}, nil
 	}
 	resultFunc := func(value asyncResult[*Response]) error {

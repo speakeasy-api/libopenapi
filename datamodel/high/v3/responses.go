@@ -11,6 +11,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	lowbase "github.com/pb33f/libopenapi/datamodel/low"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"github.com/pb33f/libopenapi/utils"
 	"gopkg.in/yaml.v3"
@@ -39,19 +40,19 @@ type Responses struct {
 
 // NewResponses will create a new high-level Responses instance from a low-level one. It operates asynchronously
 // internally, as each response may be considerable in complexity.
-func NewResponses(responses *low.Responses) *Responses {
+func NewResponses(responses *low.Responses, idx *index.SpecIndex) *Responses {
 	r := new(Responses)
 	r.low = responses
 	r.Extensions = high.ExtractExtensions(responses.Extensions)
 	if !responses.Default.IsEmpty() {
-		r.Default = NewResponse(responses.Default.Value)
+		r.Default = NewResponse(responses.Default.Value, idx)
 	}
 	codes := orderedmap.New[string, *Response]()
 
 	translateFunc := func(pair orderedmap.Pair[lowbase.KeyReference[string], lowbase.ValueReference[*low.Response]]) (asyncResult[*Response], error) {
 		return asyncResult[*Response]{
 			key:    pair.Key().Value,
-			result: NewResponse(pair.Value().Value),
+			result: NewResponse(pair.Value().Value, idx),
 		}, nil
 	}
 	resultFunc := func(value asyncResult[*Response]) error {

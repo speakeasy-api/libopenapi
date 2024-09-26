@@ -99,7 +99,7 @@ func (h *Header) Hash() [32]byte {
 }
 
 // Build will extract extensions, examples, schema and content/media types from node.
-func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Header, error) {
 	h.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	h.RootNode = root
@@ -127,7 +127,7 @@ func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index
 	// handle examples if set.
 	exps, expsL, expsN, eErr := low.ExtractMap[*base.Example](ctx, base.ExamplesLabel, root, idx)
 	if eErr != nil {
-		return eErr
+		return nil, eErr
 	}
 	if exps != nil {
 		h.Examples = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*base.Example]]]{
@@ -141,7 +141,7 @@ func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index
 	// handle schema
 	sch, sErr := base.ExtractSchema(ctx, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	if sch != nil {
 		h.Schema = *sch
@@ -150,7 +150,7 @@ func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index
 	// handle content, if set.
 	con, cL, cN, cErr := low.ExtractMap[*MediaType](ctx, ContentLabel, root, idx)
 	if cErr != nil {
-		return cErr
+		return nil, cErr
 	}
 	h.Content = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*MediaType]]]{
 		Value:     con,
@@ -160,7 +160,7 @@ func (h *Header) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index
 	if cL != nil {
 		h.Nodes.Store(cL.Line, cL)
 	}
-	return nil
+	return h, nil
 }
 
 // Getter methods to satisfy OpenAPIHeader interface.

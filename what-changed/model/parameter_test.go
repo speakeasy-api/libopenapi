@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareParameters(t *testing.T) {
-
 	left := `name: a param`
 	right := `name: a param`
 
@@ -27,8 +27,8 @@ func TestCompareParameters(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -36,7 +36,6 @@ func TestCompareParameters(t *testing.T) {
 }
 
 func TestCompareParameters_V3(t *testing.T) {
-
 	left := `name: a param`
 	right := `name: a parama`
 
@@ -49,8 +48,8 @@ func TestCompareParameters_V3(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParametersV3(&lDoc, &rDoc)
@@ -58,7 +57,6 @@ func TestCompareParameters_V3(t *testing.T) {
 }
 
 func TestCompareParameters_V3_Schema(t *testing.T) {
-
 	left := `schema:
   description: something new`
 	right := `schema:
@@ -73,8 +71,8 @@ func TestCompareParameters_V3_Schema(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -82,11 +80,9 @@ func TestCompareParameters_V3_Schema(t *testing.T) {
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
 	assert.Equal(t, 1, extChanges.SchemaChanges.TotalChanges())
-
 }
 
 func TestCompareParameters_V3_SchemaAdd(t *testing.T) {
-
 	left := `description: hello`
 	right := `description: hello
 schema:
@@ -101,8 +97,8 @@ schema:
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -110,11 +106,9 @@ schema:
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 1, extChanges.TotalBreakingChanges())
 	assert.Equal(t, ObjectAdded, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareParameters_V3_SchemaRemove(t *testing.T) {
-
 	left := `description: hello`
 	right := `description: hello
 schema:
@@ -129,8 +123,8 @@ schema:
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&rDoc, &lDoc)
@@ -138,11 +132,9 @@ schema:
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 1, extChanges.TotalBreakingChanges())
 	assert.Equal(t, ObjectRemoved, extChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareParameters_V3_Extensions(t *testing.T) {
-
 	left := `x-thing: thang`
 	right := `x-thing: dang`
 
@@ -155,8 +147,8 @@ func TestCompareParameters_V3_Extensions(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -164,11 +156,9 @@ func TestCompareParameters_V3_Extensions(t *testing.T) {
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
 	assert.Equal(t, 1, extChanges.ExtensionChanges.TotalChanges())
-
 }
 
 func TestCompareParameters_V3_ExampleChange(t *testing.T) {
-
 	left := `example: a string`
 	right := `example:
  now: an object`
@@ -182,8 +172,8 @@ func TestCompareParameters_V3_ExampleChange(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -193,7 +183,6 @@ func TestCompareParameters_V3_ExampleChange(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ExampleEqual(t *testing.T) {
-
 	left := `example: a string`
 	right := `example: a string`
 
@@ -206,8 +195,8 @@ func TestCompareParameters_V3_ExampleEqual(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -215,7 +204,6 @@ func TestCompareParameters_V3_ExampleEqual(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ExampleAdd(t *testing.T) {
-
 	left := `description: something`
 	right := `description: something
 example: a string`
@@ -229,8 +217,8 @@ example: a string`
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -241,7 +229,6 @@ example: a string`
 }
 
 func TestCompareParameters_V3_ExampleRemove(t *testing.T) {
-
 	left := `description: something`
 	right := `description: something
 example: a string`
@@ -255,8 +242,8 @@ example: a string`
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&rDoc, &lDoc)
@@ -267,7 +254,6 @@ example: a string`
 }
 
 func TestCompareParameters_V3_ExamplesChanged(t *testing.T) {
-
 	left := `examples:
   anExample:
     value: I love magic herbs`
@@ -284,8 +270,8 @@ func TestCompareParameters_V3_ExamplesChanged(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -296,7 +282,6 @@ func TestCompareParameters_V3_ExamplesChanged(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ExamplesAdded(t *testing.T) {
-
 	left := `examples:
   anExample:
     value: I love magic herbs
@@ -316,8 +301,8 @@ func TestCompareParameters_V3_ExamplesAdded(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -328,7 +313,6 @@ func TestCompareParameters_V3_ExamplesAdded(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ExamplesRemoved(t *testing.T) {
-
 	left := `examples:
   anExample:
     value: I love magic herbs
@@ -348,8 +332,8 @@ func TestCompareParameters_V3_ExamplesRemoved(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&rDoc, &lDoc)
@@ -360,7 +344,6 @@ func TestCompareParameters_V3_ExamplesRemoved(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ContentChanged(t *testing.T) {
-
 	left := `content:
   application/json:
     schema:
@@ -380,8 +363,8 @@ func TestCompareParameters_V3_ContentChanged(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -393,7 +376,6 @@ func TestCompareParameters_V3_ContentChanged(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ContentAdded(t *testing.T) {
-
 	left := `content:
   application/json:
     schema:
@@ -416,8 +398,8 @@ func TestCompareParameters_V3_ContentAdded(t *testing.T) {
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -428,7 +410,6 @@ func TestCompareParameters_V3_ContentAdded(t *testing.T) {
 }
 
 func TestCompareParameters_V2_DefaultChange(t *testing.T) {
-
 	left := `default: wat?`
 	right := `default: why?`
 
@@ -441,8 +422,8 @@ func TestCompareParameters_V2_DefaultChange(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -452,7 +433,6 @@ func TestCompareParameters_V2_DefaultChange(t *testing.T) {
 }
 
 func TestCompareParameters_V2_DefaultRemove(t *testing.T) {
-
 	left := `description: hello
 default: wat?`
 	right := `description: hello`
@@ -466,8 +446,8 @@ default: wat?`
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -477,7 +457,6 @@ default: wat?`
 }
 
 func TestCompareParameters_V2_EnumChange(t *testing.T) {
-
 	left := `enum:
   - one`
 	right := `enum:
@@ -492,8 +471,8 @@ func TestCompareParameters_V2_EnumChange(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -503,7 +482,6 @@ func TestCompareParameters_V2_EnumChange(t *testing.T) {
 }
 
 func TestCompareParameters_V2_EnumEqual_Reorder(t *testing.T) {
-
 	left := `enum:
   - one
   - two`
@@ -520,8 +498,8 @@ func TestCompareParameters_V2_EnumEqual_Reorder(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -529,7 +507,6 @@ func TestCompareParameters_V2_EnumEqual_Reorder(t *testing.T) {
 }
 
 func TestCompareParameters_V3_ContentChange(t *testing.T) {
-
 	left := `description: something`
 	right := `description: something
 example: a string`
@@ -543,8 +520,8 @@ example: a string`
 	var rDoc v3.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareParameters(&rDoc, &lDoc)
@@ -555,7 +532,6 @@ example: a string`
 }
 
 func TestCompareParameters_V2_Equal(t *testing.T) {
-
 	left := `name: a param`
 	right := `name: a param`
 
@@ -568,8 +544,8 @@ func TestCompareParameters_V2_Equal(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -577,7 +553,6 @@ func TestCompareParameters_V2_Equal(t *testing.T) {
 }
 
 func TestCompareParameters_V2(t *testing.T) {
-
 	left := `name: a param`
 	right := `name: a parama`
 
@@ -590,8 +565,8 @@ func TestCompareParameters_V2(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -599,7 +574,6 @@ func TestCompareParameters_V2(t *testing.T) {
 }
 
 func TestCompareParameters_V2_ItemsChange(t *testing.T) {
-
 	left := `items:
   type: string`
 	right := `items:
@@ -614,8 +588,8 @@ func TestCompareParameters_V2_ItemsChange(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -623,11 +597,9 @@ func TestCompareParameters_V2_ItemsChange(t *testing.T) {
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 1, extChanges.TotalBreakingChanges())
 	assert.Equal(t, Modified, extChanges.ItemsChanges.Changes[0].ChangeType)
-
 }
 
 func TestCompareParameters_V2_ItemsAdd(t *testing.T) {
-
 	left := `description: something`
 	right := `description: something
 items:
@@ -642,8 +614,8 @@ items:
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)
@@ -654,7 +626,6 @@ items:
 }
 
 func TestCompareParameters_V2_ItemsRemove(t *testing.T) {
-
 	left := `description: something`
 	right := `description: something
 items:
@@ -669,8 +640,8 @@ items:
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&rDoc, &lDoc)
@@ -681,7 +652,6 @@ items:
 }
 
 func TestCompareParameters_V2_Extensions(t *testing.T) {
-
 	left := `x-thing: thang`
 	right := `x-thing: dang`
 
@@ -694,8 +664,8 @@ func TestCompareParameters_V2_Extensions(t *testing.T) {
 	var rDoc v2.Parameter
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareParameters(&lDoc, &rDoc)

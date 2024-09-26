@@ -6,12 +6,13 @@ package base
 import (
 	"context"
 	"crypto/sha256"
+	"strings"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"github.com/pb33f/libopenapi/utils"
 	"gopkg.in/yaml.v3"
-	"strings"
 )
 
 // License is a low-level representation of a License object as defined by OpenAPI 2 and OpenAPI 3
@@ -30,7 +31,7 @@ type License struct {
 }
 
 // Build out a license, complain if both a URL and identifier are present as they are mutually exclusive
-func (l *License) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (l *License) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*License, error) {
 	l.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	l.RootNode = root
@@ -39,7 +40,7 @@ func (l *License) Build(ctx context.Context, keyNode, root *yaml.Node, idx *inde
 	no := low.ExtractNodes(ctx, root)
 	l.Extensions = low.ExtractExtensions(root)
 	l.Nodes = no
-	return nil
+	return l, nil
 }
 
 // GetRootNode will return the root yaml node of the License object

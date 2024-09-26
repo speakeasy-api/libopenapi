@@ -159,9 +159,9 @@ func TestMediaType_Examples(t *testing.T) {
 
 	var n v3.MediaType
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewMediaType(&n)
+	r := NewMediaType(&n, idx)
 
 	assert.Equal(t, 2, orderedmap.Len(r.Examples))
 
@@ -183,9 +183,9 @@ func TestMediaType_Examples_NotFromSchema(t *testing.T) {
 
 	var n v3.MediaType
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewMediaType(&n)
+	r := NewMediaType(&n, idx)
 
 	assert.Equal(t, 0, orderedmap.Len(r.Examples))
 }

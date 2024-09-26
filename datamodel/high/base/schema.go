@@ -9,6 +9,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/datamodel/low/base"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -111,7 +112,7 @@ type Schema struct {
 }
 
 // NewSchema will create a new high-level schema from a low-level one.
-func NewSchema(schema *base.Schema) *Schema {
+func NewSchema(schema *base.Schema, idx *index.SpecIndex) *Schema {
 	s := new(Schema)
 	s.low = schema
 	s.Title = schema.Title.Value
@@ -185,37 +186,37 @@ func NewSchema(schema *base.Schema) *Schema {
 		s.Contains = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.Contains.ValueNode,
 			Value:     schema.Contains.Value,
-		})
+		}, idx)
 	}
 	if !schema.If.IsEmpty() {
 		s.If = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.If.ValueNode,
 			Value:     schema.If.Value,
-		})
+		}, idx)
 	}
 	if !schema.Else.IsEmpty() {
 		s.Else = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.Else.ValueNode,
 			Value:     schema.Else.Value,
-		})
+		}, idx)
 	}
 	if !schema.Then.IsEmpty() {
 		s.Then = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.Then.ValueNode,
 			Value:     schema.Then.Value,
-		})
+		}, idx)
 	}
 	if !schema.PropertyNames.IsEmpty() {
 		s.PropertyNames = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.PropertyNames.ValueNode,
 			Value:     schema.PropertyNames.Value,
-		})
+		}, idx)
 	}
 	if !schema.UnevaluatedItems.IsEmpty() {
 		s.UnevaluatedItems = NewSchemaProxy(&lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: schema.UnevaluatedItems.ValueNode,
 			Value:     schema.UnevaluatedItems.Value,
-		})
+		}, idx)
 	}
 
 	var unevaluatedProperties *DynamicValue[*SchemaProxy, bool]
@@ -226,7 +227,7 @@ func NewSchema(schema *base.Schema) *Schema {
 					ValueNode: schema.UnevaluatedProperties.ValueNode,
 					Value:     schema.UnevaluatedProperties.Value.A,
 					KeyNode:   schema.UnevaluatedProperties.KeyNode,
-				}),
+				}, idx),
 			}
 		} else {
 			unevaluatedProperties = &DynamicValue[*SchemaProxy, bool]{N: 1, B: schema.UnevaluatedProperties.Value.B}
@@ -256,7 +257,7 @@ func NewSchema(schema *base.Schema) *Schema {
 					ValueNode: schema.AdditionalProperties.ValueNode,
 					Value:     schema.AdditionalProperties.Value.A,
 					KeyNode:   schema.AdditionalProperties.KeyNode,
-				}),
+				}, idx),
 			}
 		} else {
 			additionalProperties = &DynamicValue[*SchemaProxy, bool]{N: 1, B: schema.AdditionalProperties.Value.B}
@@ -326,16 +327,16 @@ func NewSchema(schema *base.Schema) *Schema {
 	}
 
 	// for every item, build schema async
-	buildSchema := func(sch lowmodel.ValueReference[*base.SchemaProxy], idx int, bChan chan buildResult) {
+	buildSchema := func(sch lowmodel.ValueReference[*base.SchemaProxy], index int, bChan chan buildResult) {
 		n := &lowmodel.NodeReference[*base.SchemaProxy]{
 			ValueNode: sch.ValueNode,
 			Value:     sch.Value,
 		}
 		n.SetReference(sch.GetReference(), sch.GetReferenceNode())
 
-		p := NewSchemaProxy(n)
+		p := NewSchemaProxy(n, idx)
 
-		bChan <- buildResult{idx: idx, s: p}
+		bChan <- buildResult{idx: index, s: p}
 	}
 
 	// schema async
@@ -364,7 +365,7 @@ func NewSchema(schema *base.Schema) *Schema {
 			Value:     v.Value,
 			KeyNode:   k.KeyNode,
 			ValueNode: v.ValueNode,
-		}))
+		}, idx))
 
 		switch sw {
 		case 0:
@@ -415,7 +416,7 @@ func NewSchema(schema *base.Schema) *Schema {
 		go buildOutSchemas(schema.OneOf.Value, &oneOf, polyCompletedChan, errChan)
 	}
 	if !schema.Not.IsEmpty() {
-		not = NewSchemaProxy(&schema.Not)
+		not = NewSchemaProxy(&schema.Not, idx)
 	}
 	if !schema.Items.IsEmpty() {
 		if schema.Items.Value.IsA() {
@@ -424,8 +425,7 @@ func NewSchema(schema *base.Schema) *Schema {
 					ValueNode: schema.Items.ValueNode,
 					Value:     schema.Items.Value.A,
 					KeyNode:   schema.Items.KeyNode,
-				},
-				),
+				}, idx),
 			}
 		} else {
 			items = &DynamicValue[*SchemaProxy, bool]{N: 1, B: schema.Items.Value.B}

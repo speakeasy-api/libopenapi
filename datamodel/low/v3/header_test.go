@@ -57,7 +57,7 @@ content:
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.Nil(t, n.GetKeyNode())
@@ -108,7 +108,7 @@ func TestHeader_Build_Success_Examples(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	exp := n.FindExample("family").Value
@@ -136,7 +136,7 @@ func TestHeader_Build_Fail_Examples(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -152,7 +152,7 @@ func TestHeader_Build_Fail_Schema(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -169,7 +169,7 @@ func TestHeader_Build_Fail_Content(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -201,7 +201,7 @@ x-mango: chutney`
 
 	var n Header
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `x-mango: chutney
 required: true
@@ -230,7 +230,7 @@ schema:
 
 	var n2 Header
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())

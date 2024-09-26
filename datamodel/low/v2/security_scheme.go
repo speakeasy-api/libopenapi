@@ -39,17 +39,17 @@ func (ss *SecurityScheme) GetExtensions() *orderedmap.Map[low.KeyReference[strin
 }
 
 // Build will extract extensions and scopes from the node.
-func (ss *SecurityScheme) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (ss *SecurityScheme) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*SecurityScheme, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	ss.Extensions = low.ExtractExtensions(root)
 
 	scopes, sErr := low.ExtractObject[*Scopes](ctx, ScopesLabel, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	ss.Scopes = scopes
-	return nil
+	return ss, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the SecurityScheme object

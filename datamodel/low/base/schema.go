@@ -727,22 +727,22 @@ func (s *Schema) Build(ctx context.Context, root *yaml.Node, idx *index.SpecInde
 	// handle externalDocs if set.
 	_, extDocLabel, extDocNode := utils.FindKeyNodeFullTop(ExternalDocsLabel, root.Content)
 	if extDocNode != nil {
-		var exDoc ExternalDoc
-		_ = low.BuildModel(extDocNode, &exDoc)
-		_ = exDoc.Build(ctx, extDocLabel, extDocNode, idx) // throws no errors, can't check for one.
+		exDoc := &ExternalDoc{}
+		_ = low.BuildModel(extDocNode, exDoc)
+		exDoc, _ = exDoc.Build(ctx, extDocLabel, extDocNode, idx) // throws no errors, can't check for one.
 		exDoc.Nodes = low.ExtractNodes(ctx, extDocNode)
-		s.ExternalDocs = low.NodeReference[*ExternalDoc]{Value: &exDoc, KeyNode: extDocLabel, ValueNode: extDocNode}
+		s.ExternalDocs = low.NodeReference[*ExternalDoc]{Value: exDoc, KeyNode: extDocLabel, ValueNode: extDocNode}
 	}
 
 	// handle xml if set.
 	_, xmlLabel, xmlNode := utils.FindKeyNodeFullTop(XMLLabel, root.Content)
 	if xmlNode != nil {
-		var xml XML
-		_ = low.BuildModel(xmlNode, &xml)
+		xml := &XML{}
+		_ = low.BuildModel(xmlNode, xml)
 		// extract extensions if set.
-		_ = xml.Build(xmlNode, idx) // returns no errors, can't check for one.
+		xml, _ = xml.Build(xmlNode, idx) // returns no errors, can't check for one.
 		xml.Nodes = low.ExtractNodes(ctx, xmlNode)
-		s.XML = low.NodeReference[*XML]{Value: &xml, KeyNode: xmlLabel, ValueNode: xmlNode}
+		s.XML = low.NodeReference[*XML]{Value: xml, KeyNode: xmlLabel, ValueNode: xmlNode}
 	}
 
 	// handle properties
@@ -1094,8 +1094,8 @@ func buildPropertyMap(ctx context.Context, parent *Schema, root *yaml.Node, idx 
 				}
 			}
 
-			sp := &SchemaProxy{ctx: foundCtx, kn: currentProp, vn: prop, idx: foundIdx}
-			sp.SetReference(refString, refNode)
+			sp := &SchemaProxy{}
+			sp, _ = sp.BuildWithRef(foundCtx, currentProp, prop, foundIdx, refString, refNode)
 
 			propertyMap.Set(low.KeyReference[string]{
 				KeyNode: currentProp,
@@ -1157,14 +1157,15 @@ func buildSchema(ctx context.Context, schemas chan schemaProxyBuildResult, label
 			// chasing down circles, that in turn spin up endless threads.
 			// In order to combat this, we need a schema proxy that will only resolve the schema when asked, and then
 			// it will only do it one level at a time.
-			sp := new(SchemaProxy)
-			sp.kn = kn
-			sp.vn = vn
-			sp.idx = fIdx
-			sp.ctx = pctx
+			sp := &SchemaProxy{}
+			var ref string
+			var refNode *yaml.Node
 			if isRef {
-				sp.SetReference(refLocation, rf)
+			  ref = refLocation
+			  refNode = rf
 			}
+			sp, _ = sp.BuildWithRef(pctx, kn, vn, fIdx, ref, refNode)
+
 			res := &low.ValueReference[*SchemaProxy]{
 				Value:     sp,
 				ValueNode: vn,
@@ -1305,9 +1306,8 @@ func ExtractSchema(ctx context.Context, root *yaml.Node, idx *index.SpecIndex) (
 	}
 
 	if schNode != nil {
-		// check if schema has already been built.
-		schema := &SchemaProxy{kn: schLabel, vn: schNode, idx: foundIndex, ctx: foundCtx}
-		schema.SetReference(refLocation, refNode)
+		schema := &SchemaProxy{}
+		schema, _ = schema.BuildWithRef(foundCtx, schLabel, schNode, foundIndex, refLocation, refNode)
 
 		n := &low.NodeReference[*SchemaProxy]{
 			Value:     schema,

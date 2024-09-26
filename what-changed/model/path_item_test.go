@@ -15,7 +15,6 @@ import (
 )
 
 func TestComparePathItem_V2(t *testing.T) {
-
 	left := `get:
   description: get me
 put:
@@ -45,8 +44,8 @@ x-thing: thang.`
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -54,7 +53,6 @@ x-thing: thang.`
 }
 
 func TestComparePathItem_V2_ModifyOps(t *testing.T) {
-
 	left := `get:
   description: get me
 put:
@@ -100,8 +98,8 @@ x-thing: ding-a-ling`
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -111,7 +109,6 @@ x-thing: ding-a-ling`
 }
 
 func TestComparePathItem_V2_ModifyParam(t *testing.T) {
-
 	left := `get:
   description: get me
 parameters:
@@ -137,8 +134,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -150,7 +147,6 @@ parameters:
 }
 
 func TestComparePathItem_V2_AddParam(t *testing.T) {
-
 	left := `get:
   description: get me
 parameters:
@@ -178,8 +174,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -190,7 +186,6 @@ parameters:
 }
 
 func TestComparePathItem_V2_RemoveParam(t *testing.T) {
-
 	left := `get:
   description: get me
 parameters:
@@ -218,8 +213,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&rDoc, &lDoc)
@@ -230,7 +225,6 @@ parameters:
 }
 
 func TestComparePathItem_V2_AddParametersToPath(t *testing.T) {
-
 	left := `get:
   description: get me`
 
@@ -253,8 +247,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -262,11 +256,9 @@ parameters:
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
 	assert.Equal(t, PropertyAdded, extChanges.Changes[0].ChangeType)
 	assert.Equal(t, v3.ParametersLabel, extChanges.Changes[0].Property)
-
 }
 
 func TestComparePathItem_V2_RemoveParametersToPath(t *testing.T) {
-
 	left := `get:
   description: get me
 parameters:
@@ -289,18 +281,16 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Equal(t, 1, extChanges.TotalBreakingChanges())
-
 }
 
 func TestComparePathItem_V2_AddMethods(t *testing.T) {
-
 	left := `parameters:
   - in: head`
 
@@ -330,8 +320,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -339,8 +329,8 @@ parameters:
 	assert.Len(t, extChanges.GetAllChanges(), 7)
 	assert.Equal(t, 0, extChanges.TotalBreakingChanges())
 }
-func TestComparePathItem_V2_RemoveMethods(t *testing.T) {
 
+func TestComparePathItem_V2_RemoveMethods(t *testing.T) {
 	left := `parameters:
   - in: head`
 
@@ -370,8 +360,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&rDoc, &lDoc)
@@ -381,7 +371,6 @@ parameters:
 }
 
 func TestComparePathItem_V3(t *testing.T) {
-
 	left := `summary: something
 description: nice
 get:
@@ -417,8 +406,8 @@ x-thing: thang.`
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -426,7 +415,6 @@ x-thing: thang.`
 }
 
 func TestComparePathItem_V3_Modify(t *testing.T) {
-
 	left := `summary: something
 description: nice
 get:
@@ -485,8 +473,8 @@ x-thing: dang.`
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -496,7 +484,6 @@ x-thing: dang.`
 }
 
 func TestComparePathItem_V3_AddParams(t *testing.T) {
-
 	left := `summary: something`
 
 	right := `summary: something
@@ -512,8 +499,8 @@ parameters:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -525,7 +512,6 @@ parameters:
 }
 
 func TestComparePathItem_V3_RemoveParams(t *testing.T) {
-
 	left := `summary: something`
 
 	right := `summary: something
@@ -541,8 +527,8 @@ parameters:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItemsV3(&rDoc, &lDoc)
@@ -554,7 +540,6 @@ parameters:
 }
 
 func TestComparePathItem_V3_AddMethods(t *testing.T) {
-
 	left := `summary: something`
 
 	right := `summary: something
@@ -584,8 +569,8 @@ trace:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -595,7 +580,6 @@ trace:
 }
 
 func TestComparePathItem_V3_RemoveMethods(t *testing.T) {
-
 	left := `summary: something`
 
 	right := `summary: something
@@ -625,8 +609,8 @@ trace:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&rDoc, &lDoc)
@@ -636,7 +620,6 @@ trace:
 }
 
 func TestComparePathItem_V3_AddParam(t *testing.T) {
-
 	left := `summary: hello`
 
 	right := `summary: hello
@@ -653,8 +636,8 @@ parameters:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -664,7 +647,6 @@ parameters:
 }
 
 func TestComparePathItem_V2_AddParamOptional(t *testing.T) {
-
 	left := `summary: hello`
 
 	right := `summary: hello
@@ -681,8 +663,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -692,7 +674,6 @@ parameters:
 }
 
 func TestComparePathItem_V3_AddParamRequired(t *testing.T) {
-
 	left := `summary: hello`
 
 	right := `summary: hello
@@ -710,8 +691,8 @@ parameters:
 	var rDoc v3.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)
@@ -721,7 +702,6 @@ parameters:
 }
 
 func TestComparePathItem_V2_AddParamRequired(t *testing.T) {
-
 	left := `summary: hello`
 
 	right := `summary: hello
@@ -739,8 +719,8 @@ parameters:
 	var rDoc v2.PathItem
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := ComparePathItems(&lDoc, &rDoc)

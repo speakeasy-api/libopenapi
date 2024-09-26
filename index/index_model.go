@@ -296,6 +296,8 @@ type SpecIndex struct {
 	nodeMap                             map[int]map[int]*yaml.Node
 	nodeMapCompleted                    chan bool
 	pendingResolve                      []refMap
+	lowSchemaProxyCache                 *sync.Map
+	highSchemaProxyCache                *sync.Map
 }
 
 // GetResolver returns the resolver for this index.
@@ -318,6 +320,14 @@ func (index *SpecIndex) GetNodeMap() map[int]map[int]*yaml.Node {
 
 func (index *SpecIndex) GetCache() *sync.Map {
 	return index.cache
+}
+
+func (index *SpecIndex) GetLowSchemaProxyCache() *sync.Map {
+	return index.lowSchemaProxyCache
+}
+
+func (index *SpecIndex) GetHighSchemaProxyCache() *sync.Map {
+	return index.highSchemaProxyCache
 }
 
 // SetAbsolutePath sets the absolute path to the spec file for the index. Will be absolute, either as a http link or a file.

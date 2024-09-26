@@ -5,17 +5,17 @@ package v3
 
 import (
 	"context"
+	"strings"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/pb33f/libopenapi/index"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"strings"
-	"testing"
 )
 
 func TestSecurityScheme_MarshalYAML(t *testing.T) {
-
 	ss := &SecurityScheme{
 		Type:        "apiKey",
 		Description: "this is a description",
@@ -32,9 +32,9 @@ func TestSecurityScheme_MarshalYAML(t *testing.T) {
 
 	var n v3.SecurityScheme
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewSecurityScheme(&n)
+	r := NewSecurityScheme(&n, idx)
 
 	dat, _ = r.Render()
 

@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareEncoding(t *testing.T) {
-
 	left := `contentType: application/json
 headers:
   aHeader:
@@ -39,8 +39,8 @@ allowReserved: true`
 	var rDoc v3.Encoding
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareEncoding(&lDoc, &rDoc)
@@ -48,7 +48,6 @@ allowReserved: true`
 }
 
 func TestCompareEncoding_Modified(t *testing.T) {
-
 	left := `contentType: application/xml
 headers:
   aHeader:
@@ -74,8 +73,8 @@ allowReserved: true`
 	var rDoc v3.Encoding
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareEncoding(&lDoc, &rDoc)
@@ -83,11 +82,9 @@ allowReserved: true`
 	assert.Equal(t, 4, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 4)
 	assert.Equal(t, 2, extChanges.TotalBreakingChanges())
-
 }
 
 func TestCompareEncoding_Added(t *testing.T) {
-
 	left := `contentType: application/json
 explode: true
 allowReserved: true`
@@ -109,8 +106,8 @@ allowReserved: true`
 	var rDoc v3.Encoding
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareEncoding(&lDoc, &rDoc)
@@ -123,7 +120,6 @@ allowReserved: true`
 }
 
 func TestCompareEncoding_Removed(t *testing.T) {
-
 	left := `contentType: application/json
 explode: true
 allowReserved: true`
@@ -145,8 +141,8 @@ allowReserved: true`
 	var rDoc v3.Encoding
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareEncoding(&rDoc, &lDoc)
@@ -154,5 +150,4 @@ allowReserved: true`
 	assert.Equal(t, 1, extChanges.TotalChanges())
 	assert.Len(t, extChanges.GetAllChanges(), 1)
 	assert.Equal(t, 1, extChanges.TotalBreakingChanges())
-
 }
