@@ -10,6 +10,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowV3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -49,7 +50,7 @@ type PathItem struct {
 }
 
 // NewPathItem creates a new high-level PathItem instance from a low-level one.
-func NewPathItem(pathItem *lowV3.PathItem) *PathItem {
+func NewPathItem(pathItem *lowV3.PathItem, idx *index.SpecIndex) *PathItem {
 	pi := new(PathItem)
 	pi.low = pathItem
 	pi.Description = pathItem.Description.Value
@@ -57,7 +58,7 @@ func NewPathItem(pathItem *lowV3.PathItem) *PathItem {
 	pi.Extensions = high.ExtractExtensions(pathItem.Extensions)
 	var servers []*Server
 	for _, ser := range pathItem.Servers.Value {
-		servers = append(servers, NewServer(ser.Value))
+		servers = append(servers, NewServer(ser.Value, idx))
 	}
 	pi.Servers = servers
 
@@ -72,7 +73,7 @@ func NewPathItem(pathItem *lowV3.PathItem) *PathItem {
 			c <- opResult{method: method, op: nil}
 			return
 		}
-		c <- opResult{method: method, op: NewOperation(op)}
+		c <- opResult{method: method, op: NewOperation(op, idx)}
 	}
 	// build out operations async.
 	go buildOperation(get, pathItem.Get.Value, opChan)
@@ -87,7 +88,7 @@ func NewPathItem(pathItem *lowV3.PathItem) *PathItem {
 	if !pathItem.Parameters.IsEmpty() {
 		params := make([]*Parameter, len(pathItem.Parameters.Value))
 		for i := range pathItem.Parameters.Value {
-			params[i] = NewParameter(pathItem.Parameters.Value[i].Value)
+			params[i] = NewParameter(pathItem.Parameters.Value[i].Value, idx)
 		}
 		pi.Parameters = params
 	}

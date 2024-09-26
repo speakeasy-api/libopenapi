@@ -9,6 +9,7 @@ import (
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
 	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 )
 
@@ -23,7 +24,7 @@ type Definitions struct {
 }
 
 // NewDefinitions will create a new high-level instance of a Definition from a low-level one.
-func NewDefinitions(definitions *low.Definitions) *Definitions {
+func NewDefinitions(definitions *low.Definitions, idx *index.SpecIndex) *Definitions {
 	rd := new(Definitions)
 	rd.low = definitions
 	defs := orderedmap.New[string, *highbase.SchemaProxy]()
@@ -32,7 +33,7 @@ func NewDefinitions(definitions *low.Definitions) *Definitions {
 			key: pair.Key().Value,
 			result: highbase.NewSchemaProxy(&lowmodel.NodeReference[*lowbase.SchemaProxy]{
 				Value: pair.Value().Value,
-			}),
+			}, idx),
 		}, nil
 	}
 	resultFunc := func(value asyncResult[*highbase.SchemaProxy]) error {

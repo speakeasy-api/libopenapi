@@ -44,9 +44,9 @@ callbacks:
 
 	var n v3.Operation
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewOperation(&n)
+	r := NewOperation(&n, idx)
 
 	assert.Equal(t, "https://pb33f.io", r.ExternalDocs.URL)
 	assert.Equal(t, 1, r.GoLow().ExternalDocs.KeyNode.Line)
@@ -138,9 +138,9 @@ security: []`
 
 	var n v3.Operation
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewOperation(&n)
+	r := NewOperation(&n, idx)
 
 	assert.NotNil(t, r.Security)
 	assert.Len(t, r.Security, 0)
@@ -155,9 +155,9 @@ func TestOperation_NoSecurity(t *testing.T) {
 
 	var n v3.Operation
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewOperation(&n)
+	r := NewOperation(&n, idx)
 
 	assert.Nil(t, r.Security)
 }

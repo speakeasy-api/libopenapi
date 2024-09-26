@@ -44,14 +44,14 @@ func TestSchemaProxy_MarshalYAML(t *testing.T) {
 	_ = yaml.Unmarshal([]byte(ymlSchema), &node)
 
 	lowProxy := new(lowbase.SchemaProxy)
-	err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
+	_, err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
 	assert.NoError(t, err)
 
 	lowRef := low.NodeReference[*lowbase.SchemaProxy]{
 		Value: lowProxy,
 	}
 
-	sp := NewSchemaProxy(&lowRef)
+	sp := NewSchemaProxy(&lowRef, idx)
 
 	origin := sp.GetReferenceOrigin()
 	assert.Nil(t, origin)
@@ -171,7 +171,7 @@ components:
 	_ = yaml.Unmarshal([]byte(ymlSchema), &node)
 
 	lowProxy := new(lowbase.SchemaProxy)
-	err := lowProxy.Build(context.Background(), &node, node.Content[0], idx)
+	_, err := lowProxy.Build(context.Background(), &node, node.Content[0], idx)
 	assert.NoError(t, err)
 
 	lowRef := low.NodeReference[*lowbase.SchemaProxy]{
@@ -179,10 +179,10 @@ components:
 		KeyNode: &node,
 	}
 
-	spEmpty := NewSchemaProxy(nil)
+	spEmpty := NewSchemaProxy(nil, idx)
 	assert.Nil(t, spEmpty.GetSchemaKeyNode())
 
-	sp := NewSchemaProxy(&lowRef)
+	sp := NewSchemaProxy(&lowRef, idx)
 	assert.NotNil(t, sp.GetSchemaKeyNode())
 
 	rend, _ := sp.MarshalYAMLInline()

@@ -39,9 +39,9 @@ links:
 
 	var n v3.Response
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewResponse(&n)
+	r := NewResponse(&n, idx)
 
 	assert.Equal(t, 1, orderedmap.Len(r.Headers))
 	assert.Equal(t, 1, orderedmap.Len(r.Content))
@@ -72,9 +72,9 @@ links:
 
 	var n v3.Response
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewResponse(&n)
+	r := NewResponse(&n, idx)
 
 	rend, _ := r.Render()
 	assert.Equal(t, yml, strings.TrimSpace(string(rend)))
@@ -98,9 +98,9 @@ links:
 
 	var n v3.Response
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewResponse(&n)
+	r := NewResponse(&n, idx)
 
 	rend, _ := r.RenderInline()
 	assert.Equal(t, yml, strings.TrimSpace(string(rend)))

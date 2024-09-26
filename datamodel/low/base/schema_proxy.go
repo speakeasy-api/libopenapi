@@ -60,17 +60,49 @@ type SchemaProxy struct {
 
 // Build will prepare the SchemaProxy for rendering, it does not build the Schema, only sets up internal state.
 // Key maybe nil if absent.
-func (sp *SchemaProxy) Build(ctx context.Context, key, value *yaml.Node, idx *index.SpecIndex) error {
+func (sp *SchemaProxy) Build(ctx context.Context, key, value *yaml.Node, idx *index.SpecIndex) (*SchemaProxy, error) {
+	var ref string
+	var refNode *yaml.Node
+
+	rf, _, r := utils.IsNodeRefValue(value)
+	if rf {
+		ref = r
+		refNode = value
+	}
+
+	return sp.BuildWithRef(ctx, key, value, idx, ref, refNode)
+}
+
+func (sp *SchemaProxy) BuildWithRef(ctx context.Context, key, value *yaml.Node, idx *index.SpecIndex, ref string, refNode *yaml.Node) (*SchemaProxy, error) {
+	cache := ref != "" && refNode != nil && idx != nil
+	// If we see more than 2 nodes in the content of the refNode then it is a schema that is a $ref alongside other nodes and can't be cached as easily so don't for now
+	cache = cache && len(refNode.Content) == 2
+
+	if cache {
+		spA, ok := idx.GetLowSchemaProxyCache().Load(ref)
+		if ok {
+			s, ok := spA.(*SchemaProxy)
+			if ok {
+				return s, nil
+			}
+		}
+	}
+
 	sp.kn = key
 	sp.vn = value
 	sp.idx = idx
 	sp.ctx = ctx
-	if rf, _, r := utils.IsNodeRefValue(value); rf {
-		sp.SetReference(r, value)
+	if ref != "" && refNode != nil {
+		sp.SetReference(ref, refNode)
 	}
 	var m sync.Map
 	sp.NodeMap = &low.NodeMap{Nodes: &m}
-	return nil
+
+	if cache {
+		idx.GetLowSchemaProxyCache().Store(ref, sp)
+	}
+
+	return sp, nil
 }
 
 // Schema will first check if this SchemaProxy has already rendered the schema, and return the pre-rendered version
@@ -153,7 +185,6 @@ func (sp *SchemaProxy) Hash() [32]byte {
 		if !sp.IsReference() {
 			// only resolve this proxy if it's not a ref.
 			sch := sp.Schema()
-			sp.rendered = sch
 			if sch != nil {
 				return sch.Hash()
 			}

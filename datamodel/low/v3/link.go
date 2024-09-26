@@ -67,7 +67,7 @@ func (l *Link) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract extensions and servers from the node.
-func (l *Link) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (l *Link) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Link, error) {
 	l.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	l.RootNode = root
@@ -87,10 +87,10 @@ func (l *Link) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.S
 	// extract server.
 	ser, sErr := low.ExtractObject[*Server](ctx, ServerLabel, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	l.Server = ser
-	return nil
+	return l, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Link object

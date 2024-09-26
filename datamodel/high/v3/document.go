@@ -111,7 +111,7 @@ func NewDocument(document *lowv3.Document) *Document {
 	}
 	var servers []*Server
 	for _, ser := range document.Servers.Value {
-		servers = append(servers, NewServer(ser.Value))
+		servers = append(servers, NewServer(ser.Value, document.Index))
 	}
 	d.Servers = servers
 	var tags []*base.Tag
@@ -126,16 +126,16 @@ func NewDocument(document *lowv3.Document) *Document {
 		d.Extensions = high.ExtractExtensions(document.Extensions)
 	}
 	if !document.Components.IsEmpty() {
-		d.Components = NewComponents(document.Components.Value)
+		d.Components = NewComponents(document.Components.Value, document.Index)
 	}
 	if !document.Paths.IsEmpty() {
-		d.Paths = NewPaths(document.Paths.Value)
+		d.Paths = NewPaths(document.Paths.Value, document.Index)
 	}
 	if !document.JsonSchemaDialect.IsEmpty() {
 		d.JsonSchemaDialect = document.JsonSchemaDialect.Value
 	}
 	if !document.Webhooks.IsEmpty() {
-		d.Webhooks = low.FromReferenceMapWithFunc(document.Webhooks.Value, NewPathItem)
+		d.Webhooks = low.FromReferenceMapWithFunc(document.Webhooks.Value, NewPathItem, document.Index)
 	}
 	if !document.Security.IsEmpty() {
 		var security []*base.SecurityRequirement

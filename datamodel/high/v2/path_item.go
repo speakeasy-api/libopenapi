@@ -11,6 +11,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowV2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -36,19 +37,19 @@ type PathItem struct {
 }
 
 // NewPathItem will create a new high-level PathItem from a low-level one. All paths are built out asynchronously.
-func NewPathItem(pathItem *lowV2.PathItem) *PathItem {
+func NewPathItem(pathItem *lowV2.PathItem, idx *index.SpecIndex) *PathItem {
 	p := new(PathItem)
 	p.low = pathItem
 	p.Extensions = high.ExtractExtensions(pathItem.Extensions)
 	if !pathItem.Parameters.IsEmpty() {
 		var params []*Parameter
 		for k := range pathItem.Parameters.Value {
-			params = append(params, NewParameter(pathItem.Parameters.Value[k].Value))
+			params = append(params, NewParameter(pathItem.Parameters.Value[k].Value, idx))
 		}
 		p.Parameters = params
 	}
 	buildOperation := func(method string, op *lowV2.Operation) *Operation {
-		return NewOperation(op)
+		return NewOperation(op, idx)
 	}
 
 	var wg sync.WaitGroup

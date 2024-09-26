@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -34,7 +35,7 @@ type Parameter struct {
 }
 
 // NewParameter will create a new high-level instance of a Parameter, using a low-level one.
-func NewParameter(param *low.Parameter) *Parameter {
+func NewParameter(param *low.Parameter, idx *index.SpecIndex) *Parameter {
 	p := new(Parameter)
 	p.low = param
 	p.Name = param.Name.Value
@@ -48,14 +49,14 @@ func NewParameter(param *low.Parameter) *Parameter {
 	}
 	p.AllowReserved = param.AllowReserved.Value
 	if !param.Schema.IsEmpty() {
-		p.Schema = base.NewSchemaProxy(&param.Schema)
+		p.Schema = base.NewSchemaProxy(&param.Schema, idx)
 	}
 	if !param.Required.IsEmpty() {
 		p.Required = &param.Required.Value
 	}
 	p.Example = param.Example.Value
-	p.Examples = base.ExtractExamples(param.Examples.Value)
-	p.Content = ExtractContent(param.Content.Value)
+	p.Examples = base.ExtractExamples(param.Examples.Value, idx)
+	p.Content = ExtractContent(param.Content.Value, idx)
 	p.Extensions = high.ExtractExtensions(param.Extensions)
 	return p
 }

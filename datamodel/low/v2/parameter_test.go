@@ -27,7 +27,7 @@ func TestParameter_Build(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -44,7 +44,7 @@ func TestParameter_Build_Items(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -61,7 +61,7 @@ func TestParameter_DefaultSlice(t *testing.T) {
 	var n Parameter
 	_ = low.BuildModel(&idxNode, &n)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	var a []any
 	_ = n.Default.Value.Decode(&a)
@@ -81,7 +81,7 @@ func TestParameter_DefaultMap(t *testing.T) {
 	var n Parameter
 	_ = low.BuildModel(&idxNode, &n)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	var m map[string]any
 	_ = n.Default.Value.Decode(&m)
@@ -99,7 +99,7 @@ func TestParameter_NoDefaultNoError(t *testing.T) {
 	var n Parameter
 	_ = low.BuildModel(&idxNode, &n)
 
-	err := n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err := n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 }
 
@@ -139,7 +139,7 @@ required: true`
 
 	var n Parameter
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `items:
  type: int
@@ -177,7 +177,7 @@ allowEmptyValue: true
 
 	var n2 Parameter
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())

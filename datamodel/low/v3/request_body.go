@@ -55,7 +55,7 @@ func (rb *RequestBody) FindContent(cType string) *low.ValueReference[*MediaType]
 }
 
 // Build will extract extensions and MediaType objects from the node.
-func (rb *RequestBody) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (rb *RequestBody) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*RequestBody, error) {
 	rb.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	rb.RootNode = root
@@ -68,7 +68,7 @@ func (rb *RequestBody) Build(ctx context.Context, keyNode, root *yaml.Node, idx 
 	// handle content, if set.
 	con, cL, cN, cErr := low.ExtractMap[*MediaType](ctx, ContentLabel, root, idx)
 	if cErr != nil {
-		return cErr
+		return nil, cErr
 	}
 	if con != nil {
 		rb.Content = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*MediaType]]]{
@@ -81,7 +81,7 @@ func (rb *RequestBody) Build(ctx context.Context, keyNode, root *yaml.Node, idx 
 			v.Value.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 		}
 	}
-	return nil
+	return rb, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the RequestBody object

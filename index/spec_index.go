@@ -79,6 +79,8 @@ func createNewIndex(rootNode *yaml.Node, index *SpecIndex, avoidBuildOut bool) *
 	go index.MapNodes(rootNode) // this can run async.
 
 	index.cache = new(sync.Map)
+	index.lowSchemaProxyCache = new(sync.Map)
+	index.highSchemaProxyCache = new(sync.Map)
 
 	// boot index.
 	results := index.ExtractRefs(index.root.Content[0], index.root, []string{}, 0, false, "")

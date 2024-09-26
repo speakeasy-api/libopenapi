@@ -81,7 +81,7 @@ func TestComponents_Build_Success(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.NotNil(t, n.GetKeyNode())
@@ -122,7 +122,7 @@ func TestComponents_Build_Success_Skip(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.NoError(t, err)
 }
 
@@ -141,7 +141,7 @@ func TestComponents_Build_Fail(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -161,7 +161,7 @@ func TestComponents_Build_ParameterFail(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -190,7 +190,7 @@ func TestComponents_Build_ParameterFail_Many(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -209,7 +209,7 @@ func TestComponents_Build_Fail_TypeFail(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -227,7 +227,7 @@ headers:
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	var xCurry string
@@ -248,7 +248,7 @@ func TestComponents_Build_HashEmpty(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	var xCurry string

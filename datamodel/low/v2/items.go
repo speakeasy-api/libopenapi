@@ -98,13 +98,13 @@ func (i *Items) Hash() [32]byte {
 }
 
 // Build will build out items and default value.
-func (i *Items) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (i *Items) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Items, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	i.Extensions = low.ExtractExtensions(root)
 	items, iErr := low.ExtractObject[*Items](ctx, ItemsLabel, root, idx)
 	if iErr != nil {
-		return iErr
+		return nil, iErr
 	}
 	i.Items = items
 
@@ -115,9 +115,8 @@ func (i *Items) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIn
 			KeyNode:   ln,
 			ValueNode: vn,
 		}
-		return nil
 	}
-	return nil
+	return i, nil
 }
 
 // IsHeader compliance methods

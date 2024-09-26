@@ -59,7 +59,7 @@ func (i *Info) GetExtensions() *orderedmap.Map[low.KeyReference[string], low.Val
 }
 
 // Build will extract out the Contact and Info objects from the supplied root node.
-func (i *Info) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (i *Info) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Info, error) {
 	i.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	i.RootNode = root
@@ -75,7 +75,7 @@ func (i *Info) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.S
 	// extract license
 	lic, _ := low.ExtractObject[*License](ctx, LicenseLabel, root, idx)
 	i.License = lic
-	return nil
+	return i, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Info object

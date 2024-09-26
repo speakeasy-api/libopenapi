@@ -32,10 +32,10 @@ x-hack: code`
 	var lowExample lowbase.Example
 	_ = lowmodel.BuildModel(cNode.Content[0], &lowExample)
 
-	_ = lowExample.Build(context.Background(), &cNode, cNode.Content[0], nil)
+	_, _ = lowExample.Build(context.Background(), &cNode, cNode.Content[0], nil)
 
 	// build high
-	highExample := NewExample(&lowExample)
+	highExample := NewExample(&lowExample, nil)
 
 	var xHack string
 	_ = highExample.Extensions.GetOrZero("x-hack").Decode(&xHack)
@@ -68,7 +68,6 @@ x-hack: code`
 	assert.Equal(t, "https://pb33f.io", j["externalValue"])
 	assert.Equal(t, "code", j["x-hack"])
 	assert.Equal(t, "a thing", j["value"])
-
 }
 
 func TestExtractExamples(t *testing.T) {
@@ -82,7 +81,7 @@ func TestExtractExamples(t *testing.T) {
 	var lowExample lowbase.Example
 	_ = lowmodel.BuildModel(cNode.Content[0], &lowExample)
 
-	_ = lowExample.Build(context.Background(), nil, cNode.Content[0], nil)
+	_, _ = lowExample.Build(context.Background(), nil, cNode.Content[0], nil)
 
 	examplesMap := orderedmap.New[lowmodel.KeyReference[string], lowmodel.ValueReference[*lowbase.Example]]()
 	examplesMap.Set(
@@ -90,7 +89,7 @@ func TestExtractExamples(t *testing.T) {
 		lowmodel.ValueReference[*lowbase.Example]{Value: &lowExample},
 	)
 
-	assert.Equal(t, "herbs", ExtractExamples(examplesMap).GetOrZero("green").Summary)
+	assert.Equal(t, "herbs", ExtractExamples(examplesMap, nil).GetOrZero("green").Summary)
 }
 
 func ExampleNewExample() {
@@ -109,10 +108,10 @@ x-hack: code`
 	_ = lowmodel.BuildModel(node.Content[0], &lowExample)
 
 	// build out low-level example
-	_ = lowExample.Build(context.Background(), nil, node.Content[0], nil)
+	_, _ = lowExample.Build(context.Background(), nil, node.Content[0], nil)
 
 	// create a new high-level example
-	highExample := NewExample(&lowExample)
+	highExample := NewExample(&lowExample, nil)
 
 	fmt.Print(highExample.ExternalValue)
 	// Output: https://pb33f.io

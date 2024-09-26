@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareMediaTypes(t *testing.T) {
-
 	left := `schema:
   type: string
 example: tasty herbs in the morning
@@ -41,8 +41,8 @@ encoding:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)
@@ -50,7 +50,6 @@ encoding:
 }
 
 func TestCompareMediaTypes_Modify(t *testing.T) {
-
 	left := `schema:
   type: string
 example: tasty herbs in the morning
@@ -78,8 +77,8 @@ encoding:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)
@@ -92,7 +91,6 @@ encoding:
 }
 
 func TestCompareMediaTypes_Modify_Examples(t *testing.T) {
-
 	left := `schema:
   type: string
 example:
@@ -113,8 +111,8 @@ example:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)
@@ -127,7 +125,6 @@ example:
 }
 
 func TestCompareMediaTypes_ExampleChangedToMap(t *testing.T) {
-
 	left := `schema:
   type: string`
 
@@ -146,8 +143,8 @@ example:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)
@@ -160,7 +157,6 @@ example:
 }
 
 func TestCompareMediaTypes_ExampleMapRemoved(t *testing.T) {
-
 	left := `schema:
   type: string`
 
@@ -179,8 +175,8 @@ example:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&rDoc, &lDoc)
@@ -193,7 +189,6 @@ example:
 }
 
 func TestCompareMediaTypes_AddSchema(t *testing.T) {
-
 	left := `example: tasty herbs in the morning
 examples:
   exampleOne:
@@ -219,8 +214,8 @@ encoding:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)
@@ -233,7 +228,6 @@ encoding:
 }
 
 func TestCompareMediaTypes_RemoveSchema(t *testing.T) {
-
 	left := `example: tasty herbs in the morning
 examples:
   exampleOne:
@@ -259,8 +253,8 @@ encoding:
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&rDoc, &lDoc)
@@ -273,7 +267,6 @@ encoding:
 }
 
 func TestCompareMediaTypes_ModifyObjects(t *testing.T) {
-
 	left := `schema:
   type: string
 example: tasty herbs in the morning
@@ -305,8 +298,8 @@ x-tea: cup`
 	var rDoc v3.MediaType
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareMediaTypes(&lDoc, &rDoc)

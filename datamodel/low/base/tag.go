@@ -48,7 +48,7 @@ func (t *Tag) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract extensions and external docs for the Tag.
-func (t *Tag) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (t *Tag) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Tag, error) {
 	t.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	t.RootNode = root
@@ -60,8 +60,11 @@ func (t *Tag) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.Sp
 
 	// extract externalDocs
 	extDocs, err := low.ExtractObject[*ExternalDoc](ctx, ExternalDocsLabel, root, idx)
+	if err != nil {
+		return nil, err
+	}
 	t.ExternalDocs = extDocs
-	return err
+	return t, nil
 }
 
 // GetExtensions returns all Tag extensions and satisfies the low.HasExtensions interface.

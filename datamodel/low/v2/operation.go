@@ -39,7 +39,7 @@ type Operation struct {
 }
 
 // Build will extract external docs, extensions, parameters, responses and security requirements.
-func (o *Operation) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (o *Operation) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Operation, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	o.Extensions = low.ExtractExtensions(root)
@@ -47,14 +47,14 @@ func (o *Operation) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 	// extract externalDocs
 	extDocs, dErr := low.ExtractObject[*base.ExternalDoc](ctx, base.ExternalDocsLabel, root, idx)
 	if dErr != nil {
-		return dErr
+		return nil, dErr
 	}
 	o.ExternalDocs = extDocs
 
 	// extract parameters
 	params, ln, vn, pErr := low.ExtractArray[*Parameter](ctx, ParametersLabel, root, idx)
 	if pErr != nil {
-		return pErr
+		return nil, pErr
 	}
 	if params != nil {
 		o.Parameters = low.NodeReference[[]low.ValueReference[*Parameter]]{
@@ -67,14 +67,14 @@ func (o *Operation) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 	// extract responses
 	respBody, respErr := low.ExtractObject[*Responses](ctx, ResponsesLabel, root, idx)
 	if respErr != nil {
-		return respErr
+		return nil, respErr
 	}
 	o.Responses = respBody
 
 	// extract security
 	sec, sln, svn, sErr := low.ExtractArray[*base.SecurityRequirement](ctx, SecurityLabel, root, idx)
 	if sErr != nil {
-		return sErr
+		return nil, sErr
 	}
 	if sec != nil {
 		o.Security = low.NodeReference[[]low.ValueReference[*base.SecurityRequirement]]{
@@ -83,7 +83,7 @@ func (o *Operation) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 			ValueNode: svn,
 		}
 	}
-	return nil
+	return o, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Operation object
@@ -161,12 +161,15 @@ func (o *Operation) Hash() [32]byte {
 func (o *Operation) GetTags() low.NodeReference[[]low.ValueReference[string]] {
 	return o.Tags
 }
+
 func (o *Operation) GetSummary() low.NodeReference[string] {
 	return o.Summary
 }
+
 func (o *Operation) GetDescription() low.NodeReference[string] {
 	return o.Description
 }
+
 func (o *Operation) GetExternalDocs() low.NodeReference[any] {
 	return low.NodeReference[any]{
 		ValueNode: o.ExternalDocs.ValueNode,
@@ -174,15 +177,19 @@ func (o *Operation) GetExternalDocs() low.NodeReference[any] {
 		Value:     o.ExternalDocs.Value,
 	}
 }
+
 func (o *Operation) GetOperationId() low.NodeReference[string] {
 	return o.OperationId
 }
+
 func (o *Operation) GetDeprecated() low.NodeReference[bool] {
 	return o.Deprecated
 }
+
 func (o *Operation) GetExtensions() *orderedmap.Map[low.KeyReference[string], low.ValueReference[*yaml.Node]] {
 	return o.Extensions
 }
+
 func (o *Operation) GetResponses() low.NodeReference[any] {
 	return low.NodeReference[any]{
 		ValueNode: o.Responses.ValueNode,
@@ -190,6 +197,7 @@ func (o *Operation) GetResponses() low.NodeReference[any] {
 		Value:     o.Responses.Value,
 	}
 }
+
 func (o *Operation) GetParameters() low.NodeReference[any] {
 	return low.NodeReference[any]{
 		ValueNode: o.Parameters.ValueNode,
@@ -197,6 +205,7 @@ func (o *Operation) GetParameters() low.NodeReference[any] {
 		Value:     o.Parameters.Value,
 	}
 }
+
 func (o *Operation) GetSecurity() low.NodeReference[any] {
 	return low.NodeReference[any]{
 		ValueNode: o.Security.ValueNode,
@@ -204,12 +213,15 @@ func (o *Operation) GetSecurity() low.NodeReference[any] {
 		Value:     o.Security.Value,
 	}
 }
+
 func (o *Operation) GetSchemes() low.NodeReference[[]low.ValueReference[string]] {
 	return o.Schemes
 }
+
 func (o *Operation) GetProduces() low.NodeReference[[]low.ValueReference[string]] {
 	return o.Produces
 }
+
 func (o *Operation) GetConsumes() low.NodeReference[[]low.ValueReference[string]] {
 	return o.Consumes
 }

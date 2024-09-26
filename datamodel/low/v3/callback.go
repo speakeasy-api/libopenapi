@@ -53,7 +53,7 @@ func (cb *Callback) FindExpression(exp string) *low.ValueReference[*PathItem] {
 }
 
 // Build will extract extensions, expressions and PathItem objects for Callback
-func (cb *Callback) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (cb *Callback) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Callback, error) {
 	cb.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	cb.RootNode = root
@@ -65,13 +65,13 @@ func (cb *Callback) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 
 	expressions, err := extractPathItemsMap(ctx, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	cb.Expression = expressions
 	for k := range expressions.KeysFromOldest() {
 		cb.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 	}
-	return nil
+	return cb, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Callback object

@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -35,7 +36,7 @@ type Link struct {
 }
 
 // NewLink will create a new high-level Link instance from a low-level one.
-func NewLink(link *lowv3.Link) *Link {
+func NewLink(link *lowv3.Link, idx *index.SpecIndex) *Link {
 	l := new(Link)
 	l.low = link
 	l.OperationRef = link.OperationRef.Value
@@ -44,7 +45,7 @@ func NewLink(link *lowv3.Link) *Link {
 	l.RequestBody = link.RequestBody.Value
 	l.Description = link.Description.Value
 	if link.Server.Value != nil {
-		l.Server = NewServer(link.Server.Value)
+		l.Server = NewServer(link.Server.Value, idx)
 	}
 	l.Extensions = high.ExtractExtensions(link.Extensions)
 	return l

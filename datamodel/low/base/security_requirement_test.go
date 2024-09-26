@@ -35,8 +35,8 @@ one:
 	var idxNode2 yaml.Node
 	_ = yaml.Unmarshal([]byte(yml2), &idxNode2)
 
-	_ = sr.Build(context.Background(), nil, idxNode.Content[0], nil)
-	_ = sr2.Build(context.Background(), nil, idxNode2.Content[0], nil)
+	_, _ = sr.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, _ = sr2.Build(context.Background(), nil, idxNode2.Content[0], nil)
 
 	assert.Equal(t, 2, orderedmap.Len(sr.Requirements.Value))
 	assert.Equal(t, []string{"one", "four"}, sr.GetKeys())
@@ -56,7 +56,7 @@ func TestSecurityRequirement_TestEmptyReq(t *testing.T) {
 	var idxNode yaml.Node
 	_ = yaml.Unmarshal([]byte(yml), &idxNode)
 
-	_ = sr.Build(context.Background(), nil, idxNode.Content[0], nil)
+	_, _ = sr.Build(context.Background(), nil, idxNode.Content[0], nil)
 
 	assert.Equal(t, 1, orderedmap.Len(sr.Requirements.Value))
 	assert.Equal(t, []string{"one"}, sr.GetKeys())
@@ -65,6 +65,6 @@ func TestSecurityRequirement_TestEmptyReq(t *testing.T) {
 
 func TestSecurityRequirement_TestEmptyContent(t *testing.T) {
 	var sr SecurityRequirement
-	_ = sr.Build(context.Background(), nil, &yaml.Node{}, nil)
+	_, _ = sr.Build(context.Background(), nil, &yaml.Node{}, nil)
 	assert.True(t, sr.ContainsEmptyRequirement)
 }

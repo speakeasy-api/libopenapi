@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareResponse_V2(t *testing.T) {
-
 	left := `description: response
 schema:
   type: string
@@ -37,16 +37,14 @@ x-toot: poot`
 	var rDoc v2.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&lDoc, &rDoc)
 	assert.Nil(t, extChanges)
-
 }
 
 func TestCompareResponse_V2_Modify(t *testing.T) {
-
 	left := `description: response
 schema:
   type: string
@@ -75,8 +73,8 @@ x-toot: poot`
 	var rDoc v2.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&lDoc, &rDoc)
 	assert.Equal(t, 5, extChanges.TotalChanges())
@@ -85,7 +83,6 @@ x-toot: poot`
 }
 
 func TestCompareResponse_V2_Add(t *testing.T) {
-
 	left := `description: response
 headers:
   thing:
@@ -109,8 +106,8 @@ examples:
 	var rDoc v2.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&lDoc, &rDoc)
 	assert.Equal(t, 2, extChanges.TotalChanges())
@@ -119,7 +116,6 @@ examples:
 }
 
 func TestCompareResponse_V2_Remove(t *testing.T) {
-
 	left := `description: response
 headers:
   thing:
@@ -143,8 +139,8 @@ examples:
 	var rDoc v2.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&rDoc, &lDoc)
 	assert.Equal(t, 2, extChanges.TotalChanges())
@@ -153,7 +149,6 @@ examples:
 }
 
 func TestCompareResponse_V3(t *testing.T) {
-
 	left := `description: response
 content:
   application/json:
@@ -177,15 +172,14 @@ x-toot: poot`
 	var rDoc v3.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&lDoc, &rDoc)
 	assert.Nil(t, extChanges)
 }
 
 func TestCompareResponse_V3_Modify(t *testing.T) {
-
 	left := `description: response
 content:
   application/json:
@@ -223,8 +217,8 @@ x-toot: pooty`
 	var rDoc v3.Response
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareResponse(&lDoc, &rDoc)
 

@@ -57,7 +57,7 @@ func (p *Paths) FindExtension(ext string) *low.ValueReference[*yaml.Node] {
 }
 
 // Build will extract extensions and paths from node.
-func (p *Paths) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (p *Paths) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Paths, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	p.Extensions = low.ExtractExtensions(root)
@@ -129,7 +129,8 @@ func (p *Paths) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIn
 		cNode := value.currentNode
 		path := new(PathItem)
 		_ = low.BuildModel(pNode, path)
-		err := path.Build(ctx, cNode, pNode, idx)
+		var err error
+		path, err = path.Build(ctx, cNode, pNode, idx)
 		if err != nil {
 			return pathBuildResult{}, err
 		}
@@ -147,11 +148,11 @@ func (p *Paths) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIn
 	err := datamodel.TranslatePipeline[buildInput, pathBuildResult](in, out, translateFunc)
 	wg.Wait()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	p.PathItems = pathsMap
-	return nil
+	return p, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the PathItem object

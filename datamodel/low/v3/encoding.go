@@ -63,7 +63,7 @@ func (en *Encoding) Hash() [32]byte {
 }
 
 // Build will extract all Header objects from supplied node.
-func (en *Encoding) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (en *Encoding) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Encoding, error) {
 	en.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	en.RootNode = root
@@ -72,7 +72,7 @@ func (en *Encoding) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 	en.Reference = new(low.Reference)
 	headers, hL, hN, err := low.ExtractMap[*Header](ctx, HeadersLabel, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if headers != nil {
 		en.Headers = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Header]]]{
@@ -85,5 +85,5 @@ func (en *Encoding) Build(ctx context.Context, keyNode, root *yaml.Node, idx *in
 			v.Value.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 		}
 	}
-	return nil
+	return en, nil
 }

@@ -68,7 +68,7 @@ func (r *Response) FindLink(hType string) *low.ValueReference[*Link] {
 }
 
 // Build will extract headers, extensions, content and links from node.
-func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*Response, error) {
 	r.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	r.RootNode = root
@@ -81,7 +81,7 @@ func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 	// extract headers
 	headers, lN, kN, err := low.ExtractMapExtensions[*Header](ctx, HeadersLabel, root, idx, true)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if headers != nil {
 		r.Headers = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Header]]]{
@@ -97,7 +97,7 @@ func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 
 	con, clN, cN, cErr := low.ExtractMap[*MediaType](ctx, ContentLabel, root, idx)
 	if cErr != nil {
-		return cErr
+		return nil, cErr
 	}
 	if con != nil {
 		r.Content = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*MediaType]]]{
@@ -114,7 +114,7 @@ func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 	// handle links if set
 	links, linkLabel, linkValue, lErr := low.ExtractMap[*Link](ctx, LinksLabel, root, idx)
 	if lErr != nil {
-		return lErr
+		return nil, lErr
 	}
 	if links != nil {
 		r.Links = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Link]]]{
@@ -127,7 +127,7 @@ func (r *Response) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 			v.Value.Nodes.Store(k.KeyNode.Line, k.KeyNode)
 		}
 	}
-	return nil
+	return r, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Response object
