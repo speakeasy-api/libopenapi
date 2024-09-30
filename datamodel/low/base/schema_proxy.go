@@ -96,7 +96,7 @@ func (sp *SchemaProxy) Schema() *Schema {
 		return nil
 	}
 	schema.ParentProxy = sp // https://github.com/pb33f/libopenapi/issues/29
-	sp.rendered = schema
+	// sp.rendered = schema
 
 	// for all the nodes added, copy them over to the schema
 	if sp.NodeMap != nil {

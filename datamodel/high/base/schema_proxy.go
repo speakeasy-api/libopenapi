@@ -99,7 +99,7 @@ func (sp *SchemaProxy) Schema() *Schema {
 		sch := NewSchema(s)
 		sch.ParentProxy = sp
 
-		sp.rendered = sch
+		// sp.rendered = sch
 		sp.lock.Unlock()
 		return sch
 	} else {
