@@ -1600,7 +1600,9 @@ func TestRolodex_With_Far_Away_Reference(t *testing.T) {
 
 	cf := CreateOpenAPIIndexConfig()
 	cf.SpecFilePath = filepath.Join(baseDir, "nested-spec", "doc3.yaml")
-	cf.BasePath = baseDir
+	absolutePath, err := filepath.Abs(cf.SpecFilePath)
+	assert.NoError(t, err)
+	cf.BasePath = absolutePath
 	cf.IgnoreArrayCircularReferences = true
 	cf.IgnorePolymorphicCircularReferences = true
 
