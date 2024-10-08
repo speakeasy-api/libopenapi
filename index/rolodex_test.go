@@ -1584,7 +1584,8 @@ func TestRolodex_SimpleTest_OneDoc(t *testing.T) {
 
 func TestRolodex_With_Far_Away_Reference(t *testing.T) {
 
-	baseDir := "rolodex_test_data"
+	baseDir := filepath.Join("rolodex_test_data", "nested-spec")
+	specPath := filepath.Join(baseDir, "doc3.yaml")
 
 	fileFS, err := NewLocalFSWithConfig(&LocalFSConfig{
 		BaseDirectory: baseDir,
@@ -1599,10 +1600,8 @@ func TestRolodex_With_Far_Away_Reference(t *testing.T) {
 	}
 
 	cf := CreateOpenAPIIndexConfig()
-	cf.SpecFilePath = filepath.Join(baseDir, "nested-spec", "doc3.yaml")
-	absolutePath, err := filepath.Abs(cf.SpecFilePath)
-	assert.NoError(t, err)
-	cf.BasePath = absolutePath
+	cf.SpecFilePath = specPath
+	cf.BasePath = baseDir
 	cf.IgnoreArrayCircularReferences = true
 	cf.IgnorePolymorphicCircularReferences = true
 
