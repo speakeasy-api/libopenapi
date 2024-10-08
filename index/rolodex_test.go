@@ -4,8 +4,6 @@
 package index
 
 import (
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v3"
 	"io"
 	"io/fs"
 	"log/slog"
@@ -19,6 +17,9 @@ import (
 	"testing"
 	"testing/fstest"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v3"
 )
 
 func TestRolodex_NewRolodex(t *testing.T) {
@@ -1523,6 +1524,82 @@ func TestRolodex_SimpleTest_OneDoc(t *testing.T) {
 
 	cf := CreateOpenAPIIndexConfig()
 	cf.SpecFilePath = filepath.Join(baseDir, "doc1.yaml")
+	cf.BasePath = baseDir
+	cf.IgnoreArrayCircularReferences = true
+	cf.IgnorePolymorphicCircularReferences = true
+
+	rolo := NewRolodex(cf)
+	rolo.AddLocalFS(baseDir, fileFS)
+
+	rootBytes, err := os.ReadFile(cf.SpecFilePath)
+	assert.NoError(t, err)
+	var rootNode yaml.Node
+	_ = yaml.Unmarshal(rootBytes, &rootNode)
+	rolo.SetRootNode(&rootNode)
+
+	err = rolo.IndexTheRolodex()
+
+	//assert.NotZero(t, rolo.GetIndexingDuration()) comes back as 0 on windows.
+	assert.NotNil(t, rolo.GetRootIndex())
+	assert.Len(t, rolo.GetIndexes(), 10)
+	assert.Len(t, rolo.GetAllReferences(), 8)
+	assert.Len(t, rolo.GetAllMappedReferences(), 8)
+
+	lineCount := rolo.GetFullLineCount()
+	assert.Equal(t, int64(167), lineCount, "total line count in the rolodex is wrong")
+
+	assert.NoError(t, err)
+	assert.Len(t, rolo.indexes, 10)
+
+	// open components.yaml
+	f, rerr := rolo.Open("components.yaml")
+	assert.NoError(t, rerr)
+	assert.Equal(t, "components.yaml", f.Name())
+
+	idx, ierr := f.(*rolodexFile).Index(cf)
+	assert.NoError(t, ierr)
+	assert.NotNil(t, idx)
+	assert.Equal(t, YAML, f.GetFileExtension())
+	assert.True(t, strings.HasSuffix(f.GetFullPath(), "rolodex_test_data"+string(os.PathSeparator)+"components.yaml"))
+	assert.NotNil(t, f.ModTime())
+	if runtime.GOOS != "windows" {
+		assert.Equal(t, int64(448), f.Size())
+	} else {
+		assert.Equal(t, int64(467), f.Size())
+	}
+	assert.False(t, f.IsDir())
+	assert.Nil(t, f.Sys())
+	assert.Equal(t, fs.FileMode(0), f.Mode())
+	assert.Len(t, f.GetErrors(), 0)
+
+	// check the index has a rolodex reference
+	assert.NotNil(t, idx.GetRolodex())
+
+	// re-run the index should be a no-op
+	assert.NoError(t, rolo.IndexTheRolodex())
+	rolo.CheckForCircularReferences()
+	assert.Len(t, rolo.GetIgnoredCircularReferences(), 0)
+
+}
+
+func TestRolodex_With_Far_Away_Reference(t *testing.T) {
+
+	baseDir := "rolodex_test_data"
+
+	fileFS, err := NewLocalFSWithConfig(&LocalFSConfig{
+		BaseDirectory: baseDir,
+		Logger: slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		})),
+		DirFS: os.DirFS(baseDir),
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cf := CreateOpenAPIIndexConfig()
+	cf.SpecFilePath = filepath.Join(baseDir, "nested-spec", "doc3.yaml")
 	cf.BasePath = baseDir
 	cf.IgnoreArrayCircularReferences = true
 	cf.IgnorePolymorphicCircularReferences = true
