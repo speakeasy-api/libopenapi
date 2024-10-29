@@ -33,7 +33,7 @@ variables:
 	assert.NoError(t, err)
 	assert.Nil(t, n.GetRootNode())
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.Equal(t, "25535d0a6dd30c609aeae6e08f9eaa82fef49df540fc048fe4adffbce7841c0b",
@@ -79,7 +79,7 @@ variables:
 	assert.NoError(t, err)
 	assert.Nil(t, n.GetRootNode())
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.Equal(t, "ec69dfcf68ad8988f3804e170ee6c4a7ad2e4ac51084796eea93168820827546",
@@ -125,7 +125,7 @@ description: high quality software for developers.`
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.Equal(t, "https://pb33f.io", n.URL.Value)
 	assert.Equal(t, "high quality software for developers.", n.Description.Value)

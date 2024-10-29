@@ -140,8 +140,8 @@ type pizza struct {
 	Description NodeReference[string]
 }
 
-func (p *pizza) Build(_ context.Context, _, _ *yaml.Node, _ *index.SpecIndex) error {
-	return nil
+func (p *pizza) Build(_ context.Context, _, _ *yaml.Node, _ *index.SpecIndex) (*pizza, error) {
+	return p, nil
 }
 
 func TestExtractObject(t *testing.T) {
@@ -335,24 +335,24 @@ type test_noGood struct {
 	DontWork int
 }
 
-func (t *test_noGood) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
-	return fmt.Errorf("I am always going to fail a core build")
+func (t *test_noGood) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*test_noGood, error) {
+	return nil, fmt.Errorf("I am always going to fail a core build")
 }
 
 type test_almostGood struct {
 	AlmostWork NodeReference[int]
 }
 
-func (t *test_almostGood) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
-	return fmt.Errorf("I am always going to fail a build out")
+func (t *test_almostGood) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*test_almostGood, error) {
+	return nil, fmt.Errorf("I am always going to fail a build out")
 }
 
 type test_Good struct {
 	AlmostWork NodeReference[int]
 }
 
-func (t *test_Good) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
-	return nil
+func (t *test_Good) Build(_ context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*test_Good, error) {
+	return t, nil
 }
 
 func TestExtractObject_BadLowLevelModel(t *testing.T) {
@@ -2189,9 +2189,9 @@ func TestFromReferenceMapWithFunc(t *testing.T) {
 	refMap := orderedmap.New[KeyReference[string], ValueReference[string]]()
 	refMap.Set(KeyReference[string]{Value: "foo"}, ValueReference[string]{Value: "bar"})
 	refMap.Set(KeyReference[string]{Value: "baz"}, ValueReference[string]{Value: "quxor"})
-	var om *orderedmap.Map[string, int] = FromReferenceMapWithFunc(refMap, func(v string) int {
+	var om *orderedmap.Map[string, int] = FromReferenceMapWithFunc(refMap, func(v string, idx *index.SpecIndex) int {
 		return len(v)
-	})
+	}, nil)
 	assert.Equal(t, 3, om.GetOrZero("foo"))
 	assert.Equal(t, 5, om.GetOrZero("baz"))
 }

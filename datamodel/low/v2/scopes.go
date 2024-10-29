@@ -36,7 +36,7 @@ func (s *Scopes) FindScope(scope string) *low.ValueReference[string] {
 }
 
 // Build will extract scope values and extensions from node.
-func (s *Scopes) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecIndex) error {
+func (s *Scopes) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecIndex) (*Scopes, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	s.Extensions = low.ExtractExtensions(root)
@@ -61,7 +61,7 @@ func (s *Scopes) Build(_ context.Context, _, root *yaml.Node, _ *index.SpecIndex
 		}
 		s.Values = valueMap
 	}
-	return nil
+	return s, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Scopes object

@@ -143,7 +143,7 @@ func (co *Components) FindCallback(callback string) *low.ValueReference[*Callbac
 
 // Build converts root YAML node containing components to low level model.
 // Process each component in parallel.
-func (co *Components) Build(ctx context.Context, root *yaml.Node, idx *index.SpecIndex) error {
+func (co *Components) Build(ctx context.Context, root *yaml.Node, idx *index.SpecIndex) (*Components, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	co.Reference = new(low.Reference)
@@ -227,7 +227,7 @@ func (co *Components) Build(ctx context.Context, root *yaml.Node, idx *index.Spe
 	}()
 
 	wg.Wait()
-	return reterr
+	return co, reterr
 }
 
 // extractComponentValues converts all the YAML nodes of a component type to
@@ -311,7 +311,7 @@ func extractComponentValues[T low.Buildable[N], N any](ctx context.Context, labe
 
 		// build.
 		_ = low.BuildModel(node, n)
-		err = n.Build(nCtx, currentLabel, node, fIdx)
+		n, err = n.Build(nCtx, currentLabel, node, fIdx)
 		if err != nil {
 			return componentBuildResult[T]{}, err
 		}

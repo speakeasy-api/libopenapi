@@ -5,16 +5,16 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v2"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v2 "github.com/pb33f/libopenapi/datamodel/low/v2"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareItems(t *testing.T) {
-
 	left := `type: string`
 
 	right := `type: int`
@@ -28,8 +28,8 @@ func TestCompareItems(t *testing.T) {
 	var rDoc v2.Items
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	changes := CompareItems(&lDoc, &rDoc)
@@ -41,7 +41,6 @@ func TestCompareItems(t *testing.T) {
 }
 
 func TestCompareItems_RecursiveCheck(t *testing.T) {
-
 	left := `type: string
 items:
   type: string`
@@ -59,8 +58,8 @@ items:
 	var rDoc v2.Items
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	changes := CompareItems(&lDoc, &rDoc)
@@ -73,7 +72,6 @@ items:
 }
 
 func TestCompareItems_AddItems(t *testing.T) {
-
 	left := `type: int`
 
 	right := `type: int
@@ -89,8 +87,8 @@ items:
 	var rDoc v2.Items
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	changes := CompareItems(&lDoc, &rDoc)
@@ -103,7 +101,6 @@ items:
 }
 
 func TestCompareItems_RemoveItems(t *testing.T) {
-
 	left := `type: int`
 
 	right := `type: int
@@ -119,8 +116,8 @@ items:
 	var rDoc v2.Items
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	changes := CompareItems(&rDoc, &lDoc)
@@ -133,7 +130,6 @@ items:
 }
 
 func TestCompareItems_RefVsInlineIdentical(t *testing.T) {
-
 	left := `swagger: 2.0
 definitions:
   thing:

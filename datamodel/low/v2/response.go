@@ -44,13 +44,13 @@ func (r *Response) FindHeader(hType string) *low.ValueReference[*Header] {
 }
 
 // Build will extract schema, extensions, examples and headers from node
-func (r *Response) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (r *Response) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Response, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	r.Extensions = low.ExtractExtensions(root)
 	s, err := base.ExtractSchema(ctx, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if s != nil {
 		r.Schema = *s
@@ -59,14 +59,14 @@ func (r *Response) Build(ctx context.Context, _, root *yaml.Node, idx *index.Spe
 	// extract examples
 	examples, expErr := low.ExtractObject[*Examples](ctx, ExamplesLabel, root, idx)
 	if expErr != nil {
-		return expErr
+		return nil, expErr
 	}
 	r.Examples = examples
 
 	// extract headers
 	headers, lN, kN, err := low.ExtractMap[*Header](ctx, HeadersLabel, root, idx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if headers != nil {
 		r.Headers = low.NodeReference[*orderedmap.Map[low.KeyReference[string], low.ValueReference[*Header]]]{
@@ -75,7 +75,7 @@ func (r *Response) Build(ctx context.Context, _, root *yaml.Node, idx *index.Spe
 			ValueNode: kN,
 		}
 	}
-	return nil
+	return r, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Response object

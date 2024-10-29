@@ -35,7 +35,7 @@ type SecurityRequirement struct {
 }
 
 // Build will extract security requirements from the node (the structure is odd, to be honest)
-func (s *SecurityRequirement) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) error {
+func (s *SecurityRequirement) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) (*SecurityRequirement, error) {
 	s.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	s.RootNode = root
@@ -80,7 +80,7 @@ func (s *SecurityRequirement) Build(ctx context.Context, keyNode, root *yaml.Nod
 		ValueNode: root,
 	}
 
-	return nil
+	return s, nil
 }
 
 // GetRootNode will return the root yaml node of the SecurityRequirement object

@@ -5,15 +5,15 @@ package v3
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/index"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestEncoding_Build_Success(t *testing.T) {
-
 	yml := `contentType: hot/cakes
 headers: 
   ohMyStars:
@@ -32,7 +32,7 @@ explode: true`
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.Equal(t, "hot/cakes", n.ContentType.Value)
 	assert.Equal(t, true, n.AllowReserved.Value)
@@ -48,7 +48,6 @@ explode: true`
 }
 
 func TestEncoding_Build_Error(t *testing.T) {
-
 	yml := `contentType: hot/cakes
 headers: 
   $ref: #/borked`
@@ -62,12 +61,11 @@ headers:
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
 func TestEncoding_Hash(t *testing.T) {
-
 	yml := `contentType: application/waffle
 headers:
   heady:
@@ -82,7 +80,7 @@ allowReserved: true`
 
 	var n Encoding
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `explode: true
 contentType: application/waffle
@@ -99,9 +97,8 @@ style: post modern
 
 	var n2 Encoding
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())
-
 }

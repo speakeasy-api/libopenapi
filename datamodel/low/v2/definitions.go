@@ -75,7 +75,7 @@ func (s *SecurityDefinitions) FindSecurityDefinition(securityDef string) *low.Va
 }
 
 // Build will extract all definitions into SchemaProxy instances.
-func (d *Definitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (d *Definitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*Definitions, error) {
 	root = utils.NodeAlias(root)
 	utils.CheckForMergeNodes(root)
 	type buildInput struct {
@@ -148,11 +148,11 @@ func (d *Definitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.
 	err := datamodel.TranslatePipeline[buildInput, definitionResult[*base.SchemaProxy]](in, out, translateFunc)
 	wg.Wait()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	d.Schemas = results
-	return nil
+	return d, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the Definitions object
@@ -165,7 +165,7 @@ func (d *Definitions) Hash() [32]byte {
 }
 
 // Build will extract all ParameterDefinitions into Parameter instances.
-func (pd *ParameterDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (pd *ParameterDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*ParameterDefinitions, error) {
 	errorChan := make(chan error)
 	resultChan := make(chan definitionResult[*Parameter])
 	var defLabel *yaml.Node
@@ -200,7 +200,7 @@ func (pd *ParameterDefinitions) Build(ctx context.Context, _, root *yaml.Node, i
 	for completedDefs < totalDefinitions {
 		select {
 		case err := <-errorChan:
-			return err
+			return nil, err
 		case sch := <-resultChan:
 			completedDefs++
 			key := low.KeyReference[string]{
@@ -211,7 +211,7 @@ func (pd *ParameterDefinitions) Build(ctx context.Context, _, root *yaml.Node, i
 		}
 	}
 	pd.Definitions = results
-	return nil
+	return pd, nil
 }
 
 // re-usable struct for holding results as k/v pairs.
@@ -221,7 +221,7 @@ type definitionResult[T any] struct {
 }
 
 // Build will extract all ResponsesDefinitions into Response instances.
-func (r *ResponsesDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (r *ResponsesDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*ResponsesDefinitions, error) {
 	errorChan := make(chan error)
 	resultChan := make(chan definitionResult[*Response])
 	var defLabel *yaml.Node
@@ -256,7 +256,7 @@ func (r *ResponsesDefinitions) Build(ctx context.Context, _, root *yaml.Node, id
 	for completedDefs < totalDefinitions {
 		select {
 		case err := <-errorChan:
-			return err
+			return nil, err
 		case sch := <-resultChan:
 			completedDefs++
 			key := low.KeyReference[string]{
@@ -267,11 +267,11 @@ func (r *ResponsesDefinitions) Build(ctx context.Context, _, root *yaml.Node, id
 		}
 	}
 	r.Definitions = results
-	return nil
+	return r, nil
 }
 
 // Build will extract all SecurityDefinitions into SecurityScheme instances.
-func (s *SecurityDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (s *SecurityDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*SecurityDefinitions, error) {
 	errorChan := make(chan error)
 	resultChan := make(chan definitionResult[*SecurityScheme])
 	var defLabel *yaml.Node
@@ -307,7 +307,7 @@ func (s *SecurityDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx
 	for completedDefs < totalDefinitions {
 		select {
 		case err := <-errorChan:
-			return err
+			return nil, err
 		case sch := <-resultChan:
 			completedDefs++
 			key := low.KeyReference[string]{
@@ -318,5 +318,5 @@ func (s *SecurityDefinitions) Build(ctx context.Context, _, root *yaml.Node, idx
 		}
 	}
 	s.Definitions = results
-	return nil
+	return s, nil
 }

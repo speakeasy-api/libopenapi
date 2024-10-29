@@ -7,6 +7,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -32,7 +33,7 @@ type Operation struct {
 }
 
 // NewOperation creates a new high-level Operation instance from a low-level one.
-func NewOperation(operation *low.Operation) *Operation {
+func NewOperation(operation *low.Operation, idx *index.SpecIndex) *Operation {
 	o := new(Operation)
 	o.low = operation
 	o.Extensions = high.ExtractExtensions(operation.Extensions)
@@ -72,12 +73,12 @@ func NewOperation(operation *low.Operation) *Operation {
 	if !operation.Parameters.IsEmpty() {
 		var params []*Parameter
 		for p := range operation.Parameters.Value {
-			params = append(params, NewParameter(operation.Parameters.Value[p].Value))
+			params = append(params, NewParameter(operation.Parameters.Value[p].Value, idx))
 		}
 		o.Parameters = params
 	}
 	if !operation.Responses.IsEmpty() {
-		o.Responses = NewResponses(operation.Responses.Value)
+		o.Responses = NewResponses(operation.Responses.Value, idx)
 	}
 	if !operation.Schemes.IsEmpty() {
 		var schemes []string

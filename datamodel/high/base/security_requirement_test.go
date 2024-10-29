@@ -16,7 +16,6 @@ import (
 )
 
 func TestNewSecurityRequirement(t *testing.T) {
-
 	var cNode yaml.Node
 
 	yml := `pizza:
@@ -31,7 +30,7 @@ cake:
 	var lowExt lowbase.SecurityRequirement
 	_ = lowmodel.BuildModel(cNode.Content[0], &lowExt)
 
-	_ = lowExt.Build(context.Background(), nil, cNode.Content[0], nil)
+	_, _ = lowExt.Build(context.Background(), nil, cNode.Content[0], nil)
 
 	highExt := NewSecurityRequirement(&lowExt)
 

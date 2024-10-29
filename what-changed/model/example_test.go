@@ -16,7 +16,6 @@ import (
 )
 
 func TestCompareExamples_SummaryModified(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: cure all`
 
@@ -29,8 +28,8 @@ func TestCompareExamples_SummaryModified(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 
@@ -44,7 +43,6 @@ func TestCompareExamples_SummaryModified(t *testing.T) {
 }
 
 func TestCompareExamples_Map(t *testing.T) {
-
 	left := `value:
   cheesy: bread
   pasta: sauce`
@@ -62,8 +60,8 @@ func TestCompareExamples_Map(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 
@@ -74,7 +72,6 @@ func TestCompareExamples_Map(t *testing.T) {
 }
 
 func TestCompareExamples_MapAdded(t *testing.T) {
-
 	left := `value:
   cheesy: bread`
 
@@ -91,8 +88,8 @@ func TestCompareExamples_MapAdded(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 
@@ -103,7 +100,6 @@ func TestCompareExamples_MapAdded(t *testing.T) {
 }
 
 func TestCompareExamples_MapRemoved(t *testing.T) {
-
 	left := `value:
   cheesy: bread`
 
@@ -120,8 +116,8 @@ func TestCompareExamples_MapRemoved(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&rDoc, &lDoc)
 
@@ -131,7 +127,6 @@ func TestCompareExamples_MapRemoved(t *testing.T) {
 }
 
 func TestCompareExamples_SummaryAdded(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: magic herbs
 description: cure all`
@@ -145,8 +140,8 @@ description: cure all`
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 
@@ -158,7 +153,6 @@ description: cure all`
 }
 
 func TestCompareExamples_ExtensionAdded(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: magic herbs
 x-herbs: cure all`
@@ -172,8 +166,8 @@ x-herbs: cure all`
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 
@@ -185,7 +179,6 @@ x-herbs: cure all`
 }
 
 func TestCompareExamples_Identical(t *testing.T) {
-
 	left := `summary: magic herbs`
 	right := `summary: magic herbs`
 
@@ -198,8 +191,8 @@ func TestCompareExamples_Identical(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	extChanges := CompareExamples(&lDoc, &rDoc)
 	assert.Nil(t, extChanges)
@@ -221,8 +214,8 @@ func TestCompareExamples_Date(t *testing.T) {
 	var rDoc base.Example
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	changes := CompareExamples(&lDoc, &rDoc)
 

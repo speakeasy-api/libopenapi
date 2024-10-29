@@ -8,6 +8,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v2low "github.com/pb33f/libopenapi/datamodel/low/v2"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -20,7 +21,7 @@ type Paths struct {
 }
 
 // NewPaths creates a new high-level instance of Paths from a low-level one.
-func NewPaths(paths *v2low.Paths) *Paths {
+func NewPaths(paths *v2low.Paths, idx *index.SpecIndex) *Paths {
 	p := new(Paths)
 	p.low = paths
 	p.Extensions = high.ExtractExtensions(paths.Extensions)
@@ -29,7 +30,7 @@ func NewPaths(paths *v2low.Paths) *Paths {
 	translateFunc := func(pair orderedmap.Pair[low.KeyReference[string], low.ValueReference[*v2low.PathItem]]) (asyncResult[*PathItem], error) {
 		return asyncResult[*PathItem]{
 			key:    pair.Key().Value,
-			result: NewPathItem(pair.Value().Value),
+			result: NewPathItem(pair.Value().Value, idx),
 		}, nil
 	}
 	resultFunc := func(result asyncResult[*PathItem]) error {

@@ -6,15 +6,15 @@ package base
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	lowbase "github.com/pb33f/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestNewContact(t *testing.T) {
-
 	var cNode yaml.Node
 
 	yml := `name: pizza
@@ -34,11 +34,9 @@ email: buckaroo@pb33f.io`
 	assert.Equal(t, "https://pb33f.io", highContact.URL)
 	assert.Equal(t, "buckaroo@pb33f.io", highContact.Email)
 	assert.Equal(t, 1, highContact.GoLow().Name.KeyNode.Line)
-
 }
 
 func ExampleNewContact() {
-
 	// define a Contact using yaml (or JSON, it doesn't matter)
 	yml := `name: Buckaroo
 url: https://pb33f.io
@@ -59,7 +57,6 @@ email: buckaroo@pb33f.io`
 }
 
 func TestContact_MarshalYAML(t *testing.T) {
-
 	yml := `name: Buckaroo
 url: https://pb33f.io
 email: buckaroo@pb33f.io
@@ -71,7 +68,7 @@ email: buckaroo@pb33f.io
 	// build low
 	var lowContact lowbase.Contact
 	_ = lowmodel.BuildModel(cNode.Content[0], &lowContact)
-	_ = lowContact.Build(context.Background(), nil, cNode.Content[0], nil)
+	_, _ = lowContact.Build(context.Background(), nil, cNode.Content[0], nil)
 
 	// build high
 	highContact := NewContact(&lowContact)
@@ -79,5 +76,4 @@ email: buckaroo@pb33f.io
 	// marshal high back to yaml, should be the same as the original, in same order.
 	bytes, _ := highContact.Render()
 	assert.Equal(t, yml, string(bytes))
-
 }

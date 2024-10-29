@@ -51,7 +51,7 @@ func (o *OAuthFlows) GetKeyNode() *yaml.Node {
 }
 
 // Build will extract extensions and all OAuthFlow types from the supplied node.
-func (o *OAuthFlows) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (o *OAuthFlows) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*OAuthFlows, error) {
 	o.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	o.RootNode = root
@@ -62,28 +62,28 @@ func (o *OAuthFlows) Build(ctx context.Context, keyNode, root *yaml.Node, idx *i
 
 	v, vErr := low.ExtractObject[*OAuthFlow](ctx, ImplicitLabel, root, idx)
 	if vErr != nil {
-		return vErr
+		return nil, vErr
 	}
 	o.Implicit = v
 
 	v, vErr = low.ExtractObject[*OAuthFlow](ctx, PasswordLabel, root, idx)
 	if vErr != nil {
-		return vErr
+		return nil, vErr
 	}
 	o.Password = v
 
 	v, vErr = low.ExtractObject[*OAuthFlow](ctx, ClientCredentialsLabel, root, idx)
 	if vErr != nil {
-		return vErr
+		return nil, vErr
 	}
 	o.ClientCredentials = v
 
 	v, vErr = low.ExtractObject[*OAuthFlow](ctx, AuthorizationCodeLabel, root, idx)
 	if vErr != nil {
-		return vErr
+		return nil, vErr
 	}
 	o.AuthorizationCode = v
-	return nil
+	return o, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the OAuthFlow object
@@ -139,7 +139,7 @@ func (o *OAuthFlow) GetRootNode() *yaml.Node {
 }
 
 // Build will extract extensions from the node.
-func (o *OAuthFlow) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) error {
+func (o *OAuthFlow) Build(ctx context.Context, _, root *yaml.Node, idx *index.SpecIndex) (*OAuthFlow, error) {
 	o.Reference = new(low.Reference)
 	o.Nodes = low.ExtractNodes(ctx, root)
 	o.Extensions = low.ExtractExtensions(root)
@@ -152,7 +152,7 @@ func (o *OAuthFlow) Build(ctx context.Context, _, root *yaml.Node, idx *index.Sp
 	}
 
 	o.RootNode = root
-	return nil
+	return o, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the OAuthFlow object

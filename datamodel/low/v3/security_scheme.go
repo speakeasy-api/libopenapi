@@ -62,7 +62,7 @@ func (ss *SecurityScheme) GetExtensions() *orderedmap.Map[low.KeyReference[strin
 }
 
 // Build will extract OAuthFlows and extensions from the node.
-func (ss *SecurityScheme) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (ss *SecurityScheme) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*SecurityScheme, error) {
 	ss.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	ss.RootNode = root
@@ -74,12 +74,12 @@ func (ss *SecurityScheme) Build(ctx context.Context, keyNode, root *yaml.Node, i
 
 	oa, oaErr := low.ExtractObject[*OAuthFlows](ctx, OAuthFlowsLabel, root, idx)
 	if oaErr != nil {
-		return oaErr
+		return nil, oaErr
 	}
 	if oa.Value != nil {
 		ss.Flows = oa
 	}
-	return nil
+	return ss, nil
 }
 
 // Hash will return a consistent SHA256 Hash of the SecurityScheme object

@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
-	"github.com/pb33f/libopenapi/datamodel/low/v3"
+	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareCallback(t *testing.T) {
-
 	left := `'{$request.query.queryUrl}':
     post:
       requestBody:
@@ -37,8 +37,8 @@ func TestCompareCallback(t *testing.T) {
 	var rDoc v3.Callback
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareCallback(&lDoc, &rDoc)
@@ -46,7 +46,6 @@ func TestCompareCallback(t *testing.T) {
 }
 
 func TestCompareCallback_Add(t *testing.T) {
-
 	left := `'{$request.query.queryUrl}':
     post:
       requestBody:
@@ -83,8 +82,8 @@ func TestCompareCallback_Add(t *testing.T) {
 	var rDoc v3.Callback
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareCallback(&lDoc, &rDoc)
@@ -96,7 +95,6 @@ func TestCompareCallback_Add(t *testing.T) {
 }
 
 func TestCompareCallback_Modify(t *testing.T) {
-
 	left := `x-pizza: tasty
 '{$request.query.queryUrl}':
     post:
@@ -134,8 +132,8 @@ func TestCompareCallback_Modify(t *testing.T) {
 	var rDoc v3.Callback
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareCallback(&lDoc, &rDoc)
@@ -147,7 +145,6 @@ func TestCompareCallback_Modify(t *testing.T) {
 }
 
 func TestCompareCallback_Remove(t *testing.T) {
-
 	left := `'{$request.query.queryUrl}':
     post:
       requestBody:
@@ -184,8 +181,8 @@ func TestCompareCallback_Remove(t *testing.T) {
 	var rDoc v3.Callback
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare.
 	extChanges := CompareCallback(&rDoc, &lDoc)

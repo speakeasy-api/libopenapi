@@ -6,6 +6,7 @@ package v3
 import (
 	"github.com/pb33f/libopenapi/datamodel/high"
 	low "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -34,7 +35,7 @@ type SecurityScheme struct {
 }
 
 // NewSecurityScheme creates a new high-level SecurityScheme from a low-level one.
-func NewSecurityScheme(ss *low.SecurityScheme) *SecurityScheme {
+func NewSecurityScheme(ss *low.SecurityScheme, idx *index.SpecIndex) *SecurityScheme {
 	s := new(SecurityScheme)
 	s.low = ss
 	s.Type = ss.Type.Value

@@ -38,9 +38,9 @@ options:
 
 	var n lowV2.PathItem
 	_ = low.BuildModel(&idxNode, &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	r := NewPathItem(&n)
+	r := NewPathItem(&n, idx)
 
 	assert.Equal(t, 7, orderedmap.Len(r.GetOperations()))
 }
@@ -92,6 +92,6 @@ func TestPathItem_NewPathItem_WithParameters(t *testing.T) {
 			},
 			ValueNode: &yaml.Node{},
 		},
-	})
+	}, nil)
 	assert.NotNil(t, pi.Parameters)
 }

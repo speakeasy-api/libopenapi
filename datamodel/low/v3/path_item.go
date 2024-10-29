@@ -116,7 +116,7 @@ func (p *PathItem) GetExtensions() *orderedmap.Map[low.KeyReference[string], low
 
 // Build extracts extensions, parameters, servers and each http method defined.
 // everything is extracted asynchronously for speed.
-func (p *PathItem) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) error {
+func (p *PathItem) Build(ctx context.Context, keyNode, root *yaml.Node, idx *index.SpecIndex) (*PathItem, error) {
 	root = utils.NodeAlias(root)
 	p.KeyNode = keyNode
 	p.RootNode = root
@@ -135,7 +135,7 @@ func (p *PathItem) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 	// extract parameters
 	params, ln, vn, pErr := low.ExtractArray[*Parameter](ctx, ParametersLabel, root, idx)
 	if pErr != nil {
-		return pErr
+		return nil, pErr
 	}
 	if params != nil {
 		p.Parameters = low.NodeReference[[]low.ValueReference[*Parameter]]{
@@ -236,11 +236,11 @@ func (p *PathItem) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 
 				if err != nil {
 					if !idx.AllowCircularReferenceResolving() {
-						return fmt.Errorf("build schema failed: %s", err.Error())
+						return nil, fmt.Errorf("build schema failed: %s", err.Error())
 					}
 				}
 			} else {
-				return fmt.Errorf("path item build failed: cannot find reference: %s at line %d, col %d",
+				return nil, fmt.Errorf("path item build failed: cannot find reference: %s at line %d, col %d",
 					pathNode.Content[1].Value, pathNode.Content[1].Line, pathNode.Content[1].Column)
 			}
 		} else {
@@ -291,18 +291,19 @@ func (p *PathItem) Build(ctx context.Context, keyNode, root *yaml.Node, idx *ind
 			refNode = op.GetReferenceNode()
 		}
 
-		err := op.Value.Build(op.Context, op.KeyNode, op.ValueNode, op.Context.Value(index.FoundIndexKey).(*index.SpecIndex))
-		if ref != "" {
-			op.Value.Reference.SetReference(ref, refNode)
-		}
+		var err error
+		op.Value, err = op.Value.Build(op.Context, op.KeyNode, op.ValueNode, op.Context.Value(index.FoundIndexKey).(*index.SpecIndex))
 		if err != nil {
 			return nil, err
 		}
+		if ref != "" {
+			op.Value.Reference.SetReference(ref, refNode)
+		}
 		return nil, nil
 	}
-	err := datamodel.TranslateSliceParallel[low.NodeReference[*Operation], any](ops, translateFunc, nil)
+	err := datamodel.TranslateSliceParallel(ops, translateFunc, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return p, nil
 }

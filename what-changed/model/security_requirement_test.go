@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/datamodel/low/base"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareSecurityRequirement_V2(t *testing.T) {
-
 	left := `auth:
  - pizza
  - pie`
@@ -31,8 +31,8 @@ func TestCompareSecurityRequirement_V2(t *testing.T) {
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -40,7 +40,6 @@ func TestCompareSecurityRequirement_V2(t *testing.T) {
 }
 
 func TestCompareSecurityRequirement_NewReq_V2(t *testing.T) {
-
 	left := `tip:
   - tap
 auth:
@@ -64,8 +63,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -77,7 +76,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_RemoveReq_V2(t *testing.T) {
-
 	left := `auth:
   - pizza
   - pie`
@@ -97,8 +95,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&rDoc, &lDoc)
@@ -110,7 +108,6 @@ biscuit:
 // codecov seems to get upset with this not being covered.
 // so lets run the damn thing a few hundred thousand times.
 func BenchmarkCompareSecurityRequirement_Remove(b *testing.B) {
-
 	left := `auth:
   - pizza
   - pie`
@@ -130,8 +127,8 @@ biscuit:
 		var rDoc base.SecurityRequirement
 		_ = low.BuildModel(lNode.Content[0], &lDoc)
 		_ = low.BuildModel(rNode.Content[0], &rDoc)
-		_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-		_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+		_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+		_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 		extChanges := CompareSecurityRequirement(&rDoc, &lDoc)
 		assert.Equal(b, 1, extChanges.TotalChanges())
 		assert.Len(b, extChanges.GetAllChanges(), 1)
@@ -140,7 +137,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_SwapOut_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -162,8 +158,8 @@ milk:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -177,7 +173,6 @@ milk:
 }
 
 func TestCompareSecurityRequirement_SwapLeft_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -199,8 +194,8 @@ milk:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -211,7 +206,6 @@ milk:
 }
 
 func TestCompareSecurityRequirement_AddedRole_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -234,8 +228,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -246,7 +240,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_AddedMultiple_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -272,8 +265,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -283,7 +276,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_ReplaceRole_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -306,8 +298,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -316,7 +308,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_Identical_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -340,8 +331,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)
@@ -349,7 +340,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_RemovedRole_V2(t *testing.T) {
-
 	left := `cheese:
   - pizza
   - pie
@@ -372,8 +362,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&rDoc, &lDoc)
@@ -384,7 +374,6 @@ biscuit:
 }
 
 func TestCompareSecurityRequirement_Add_V2(t *testing.T) {
-
 	left := `
 biscuit:
   - biscotti
@@ -408,8 +397,8 @@ biscuit:
 	var rDoc base.SecurityRequirement
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareSecurityRequirement(&lDoc, &rDoc)

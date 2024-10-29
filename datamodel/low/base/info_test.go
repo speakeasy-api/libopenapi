@@ -36,7 +36,7 @@ x-cli-name: pizza cli`
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	assert.Equal(t, "pizza", n.Title.Value)
@@ -66,14 +66,14 @@ x-cli-name: pizza cli`
 
 func TestContact_Build(t *testing.T) {
 	n := &Contact{}
-	k := n.Build(context.Background(), nil, nil, nil)
-	assert.Nil(t, k)
+	_, err := n.Build(context.Background(), nil, nil, nil)
+	assert.Nil(t, err)
 }
 
 func TestLicense_Build(t *testing.T) {
 	n := &License{}
-	k := n.Build(context.Background(), nil, nil, nil)
-	assert.Nil(t, k)
+	_, err := n.Build(context.Background(), nil, nil, nil)
+	assert.Nil(t, err)
 }
 
 func TestInfo_Hash(t *testing.T) {
@@ -112,8 +112,8 @@ x-b33f: princess`
 	var rDoc Info
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	assert.Equal(t, lDoc.Hash(), rDoc.Hash())
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/low"
 	lowmodel "github.com/pb33f/libopenapi/datamodel/low"
 	lowv3 "github.com/pb33f/libopenapi/datamodel/low/v3"
+	"github.com/pb33f/libopenapi/index"
 	"github.com/pb33f/libopenapi/orderedmap"
 	"gopkg.in/yaml.v3"
 )
@@ -24,7 +25,7 @@ type Encoding struct {
 }
 
 // NewEncoding creates a new instance of Encoding from a low-level one.
-func NewEncoding(encoding *lowv3.Encoding) *Encoding {
+func NewEncoding(encoding *lowv3.Encoding, idx *index.SpecIndex) *Encoding {
 	e := new(Encoding)
 	e.low = encoding
 	e.ContentType = encoding.ContentType.Value
@@ -33,7 +34,7 @@ func NewEncoding(encoding *lowv3.Encoding) *Encoding {
 		e.Explode = &encoding.Explode.Value
 	}
 	e.AllowReserved = encoding.AllowReserved.Value
-	e.Headers = ExtractHeaders(encoding.Headers.Value)
+	e.Headers = ExtractHeaders(encoding.Headers.Value, idx)
 	return e
 }
 
@@ -59,6 +60,6 @@ func (e *Encoding) MarshalYAML() (interface{}, error) {
 }
 
 // ExtractEncoding converts hard to navigate low-level plumbing Encoding definitions, into a high-level simple map
-func ExtractEncoding(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*lowv3.Encoding]]) *orderedmap.Map[string, *Encoding] {
-	return low.FromReferenceMapWithFunc(elements, NewEncoding)
+func ExtractEncoding(elements *orderedmap.Map[lowmodel.KeyReference[string], lowmodel.ValueReference[*lowv3.Encoding]], idx *index.SpecIndex) *orderedmap.Map[string, *Encoding] {
+	return low.FromReferenceMapWithFunc(elements, NewEncoding, idx)
 }

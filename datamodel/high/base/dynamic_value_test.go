@@ -114,14 +114,14 @@ func TestDynamicValue_MarshalYAMLInline(t *testing.T) {
 	_ = yaml.Unmarshal([]byte(ymlSchema), &node)
 
 	lowProxy := new(lowbase.SchemaProxy)
-	err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
+	_, err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
 	assert.NoError(t, err)
 
 	lowRef := low.NodeReference[*lowbase.SchemaProxy]{
 		Value: lowProxy,
 	}
 
-	sp := NewSchemaProxy(&lowRef)
+	sp := NewSchemaProxy(&lowRef, idx)
 
 	rend, _ := sp.MarshalYAMLInline()
 
@@ -157,14 +157,14 @@ func TestDynamicValue_MarshalYAMLInline_Error(t *testing.T) {
 	_ = yaml.Unmarshal([]byte(ymlSchema), &node)
 
 	lowProxy := new(lowbase.SchemaProxy)
-	err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
+	_, err := lowProxy.Build(context.Background(), nil, node.Content[0], idx)
 	assert.NoError(t, err)
 
 	lowRef := low.NodeReference[*lowbase.SchemaProxy]{
 		Value: lowProxy,
 	}
 
-	sp := NewSchemaProxy(&lowRef)
+	sp := NewSchemaProxy(&lowRef, idx)
 
 	rend, er := sp.MarshalYAMLInline()
 	assert.Nil(t, rend)

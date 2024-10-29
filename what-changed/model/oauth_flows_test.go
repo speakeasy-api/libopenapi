@@ -5,15 +5,15 @@ package model
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	v3 "github.com/pb33f/libopenapi/datamodel/low/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestCompareOAuthFlow(t *testing.T) {
-
 	left := `authorizationUrl: cheese
 tokenUrl: biscuits
 refreshUrl: cake
@@ -35,17 +35,15 @@ scopes:
 	var rDoc v3.OAuthFlow
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlow(&lDoc, &rDoc)
 	assert.Nil(t, extChanges)
-
 }
 
 func TestCompareOAuthFlow_Modified(t *testing.T) {
-
 	left := `authorizationUrl: toast
 tokenUrl: biscuits
 refreshUrl: roast
@@ -69,8 +67,8 @@ x-burgers: crispy`
 	var rDoc v3.OAuthFlow
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlow(&lDoc, &rDoc)
@@ -80,7 +78,6 @@ x-burgers: crispy`
 }
 
 func TestCompareOAuthFlow_AddScope(t *testing.T) {
-
 	left := `authorizationUrl: toast
 tokenUrl: biscuits
 refreshUrl: roast
@@ -105,8 +102,8 @@ x-burgers: nice`
 	var rDoc v3.OAuthFlow
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlow(&lDoc, &rDoc)
@@ -118,7 +115,6 @@ x-burgers: nice`
 }
 
 func TestCompareOAuthFlow_RemoveScope(t *testing.T) {
-
 	left := `authorizationUrl: toast
 tokenUrl: biscuits
 refreshUrl: roast
@@ -143,8 +139,8 @@ x-burgers: nice`
 	var rDoc v3.OAuthFlow
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlow(&rDoc, &lDoc)
@@ -156,7 +152,6 @@ x-burgers: nice`
 }
 
 func TestCompareOAuthFlow_ModifyScope(t *testing.T) {
-
 	left := `authorizationUrl: toast
 tokenUrl: biscuits
 refreshUrl: roast
@@ -180,8 +175,8 @@ x-burgers: nice`
 	var rDoc v3.OAuthFlow
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlow(&lDoc, &rDoc)
@@ -224,8 +219,8 @@ x-coke: cola`
 	var rDoc v3.OAuthFlows
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlows(&lDoc, &rDoc)
@@ -254,8 +249,8 @@ x-coke: cola`
 	var rDoc v3.OAuthFlows
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlows(&lDoc, &rDoc)
@@ -286,8 +281,8 @@ x-coke: cola`
 	var rDoc v3.OAuthFlows
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlows(&rDoc, &lDoc)
@@ -326,8 +321,8 @@ x-coke: cherry`
 	var rDoc v3.OAuthFlows
 	_ = low.BuildModel(lNode.Content[0], &lDoc)
 	_ = low.BuildModel(rNode.Content[0], &rDoc)
-	_ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
-	_ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
+	_, _ = lDoc.Build(context.Background(), nil, lNode.Content[0], nil)
+	_, _ = rDoc.Build(context.Background(), nil, rNode.Content[0], nil)
 
 	// compare
 	extChanges := CompareOAuthFlows(&lDoc, &rDoc)

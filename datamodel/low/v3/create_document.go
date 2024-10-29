@@ -186,10 +186,10 @@ func createDocument(info *datamodel.SpecInfo, config *datamodel.DocumentConfigur
 func extractInfo(ctx context.Context, info *datamodel.SpecInfo, doc *Document, idx *index.SpecIndex) error {
 	_, ln, vn := utils.FindKeyNodeFullTop(base.InfoLabel, info.RootNode.Content[0].Content)
 	if vn != nil {
-		ir := base.Info{}
-		_ = low.BuildModel(vn, &ir)
-		_ = ir.Build(ctx, ln, vn, idx)
-		nr := low.NodeReference[*base.Info]{Value: &ir, ValueNode: vn, KeyNode: ln}
+		ir := &base.Info{}
+		_ = low.BuildModel(vn, ir)
+		ir, _ = ir.Build(ctx, ln, vn, idx)
+		nr := low.NodeReference[*base.Info]{Value: ir, ValueNode: vn, KeyNode: ln}
 		doc.Info = nr
 	}
 	return nil
@@ -222,13 +222,13 @@ func extractExternalDocs(ctx context.Context, info *datamodel.SpecInfo, doc *Doc
 func extractComponents(ctx context.Context, info *datamodel.SpecInfo, doc *Document, idx *index.SpecIndex) error {
 	_, ln, vn := utils.FindKeyNodeFullTop(ComponentsLabel, info.RootNode.Content[0].Content)
 	if vn != nil {
-		ir := Components{}
-		_ = low.BuildModel(vn, &ir)
-		err := ir.Build(ctx, vn, idx)
+		c := &Components{}
+		_ = low.BuildModel(vn, c)
+		c, err := c.Build(ctx, vn, idx)
 		if err != nil {
 			return err
 		}
-		nr := low.NodeReference[*Components]{Value: &ir, ValueNode: vn, KeyNode: ln}
+		nr := low.NodeReference[*Components]{Value: c, ValueNode: vn, KeyNode: ln}
 		doc.Components = nr
 	}
 	return nil
@@ -241,11 +241,11 @@ func extractServers(ctx context.Context, info *datamodel.SpecInfo, doc *Document
 			var servers []low.ValueReference[*Server]
 			for _, srvN := range vn.Content {
 				if utils.IsNodeMap(srvN) {
-					srvr := Server{}
-					_ = low.BuildModel(srvN, &srvr)
-					_ = srvr.Build(ctx, ln, srvN, idx)
+					srvr := &Server{}
+					_ = low.BuildModel(srvN, srvr)
+					srvr, _ = srvr.Build(ctx, ln, srvN, idx)
 					servers = append(servers, low.ValueReference[*Server]{
-						Value:     &srvr,
+						Value:     srvr,
 						ValueNode: srvN,
 					})
 				}
@@ -267,13 +267,15 @@ func extractTags(ctx context.Context, info *datamodel.SpecInfo, doc *Document, i
 			var tags []low.ValueReference[*base.Tag]
 			for _, tagN := range vn.Content {
 				if utils.IsNodeMap(tagN) {
-					tag := base.Tag{}
-					_ = low.BuildModel(tagN, &tag)
-					if err := tag.Build(ctx, ln, tagN, idx); err != nil {
+					tag := &base.Tag{}
+					_ = low.BuildModel(tagN, tag)
+					var err error
+					tag, err = tag.Build(ctx, ln, tagN, idx)
+					if err != nil {
 						return err
 					}
 					tags = append(tags, low.ValueReference[*base.Tag]{
-						Value:     &tag,
+						Value:     tag,
 						ValueNode: tagN,
 					})
 				}
@@ -291,12 +293,13 @@ func extractTags(ctx context.Context, info *datamodel.SpecInfo, doc *Document, i
 func extractPaths(ctx context.Context, info *datamodel.SpecInfo, doc *Document, idx *index.SpecIndex) error {
 	_, ln, vn := utils.FindKeyNodeFull(PathsLabel, info.RootNode.Content[0].Content)
 	if vn != nil {
-		ir := Paths{}
-		err := ir.Build(ctx, ln, vn, idx)
+		p := &Paths{}
+		var err error
+		p, err = p.Build(ctx, ln, vn, idx)
 		if err != nil {
 			return err
 		}
-		nr := low.NodeReference[*Paths]{Value: &ir, ValueNode: vn, KeyNode: ln}
+		nr := low.NodeReference[*Paths]{Value: p, ValueNode: vn, KeyNode: ln}
 		doc.Paths = nr
 	}
 	return nil

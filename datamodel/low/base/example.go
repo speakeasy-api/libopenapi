@@ -68,7 +68,7 @@ func (ex *Example) Hash() [32]byte {
 }
 
 // Build extracts extensions and example value
-func (ex *Example) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) error {
+func (ex *Example) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index.SpecIndex) (*Example, error) {
 	ex.KeyNode = keyNode
 	root = utils.NodeAlias(root)
 	ex.RootNode = root
@@ -93,9 +93,8 @@ func (ex *Example) Build(ctx context.Context, keyNode, root *yaml.Node, _ *index
 			}
 			return true
 		})
-		return nil
 	}
-	return nil
+	return ex, nil
 }
 
 // GetExtensions will return Example extensions to satisfy the HasExtensions interface.

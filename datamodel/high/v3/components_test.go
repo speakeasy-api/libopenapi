@@ -56,9 +56,9 @@ func TestComponents_MarshalYAML(t *testing.T) {
 
 	var n v3.Components
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), idxNode.Content[0], idx)
 
-	r := NewComponents(&n)
+	r := NewComponents(&n, idx)
 
 	desired := `responses:
     "200":

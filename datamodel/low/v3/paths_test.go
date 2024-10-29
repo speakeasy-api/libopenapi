@@ -51,7 +51,7 @@ x-milk: cold`
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 	assert.NotNil(t, n.GetRootNode())
 	assert.Nil(t, n.GetKeyNode())
@@ -90,7 +90,7 @@ func TestPaths_Build_Fail(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -114,7 +114,7 @@ func TestPaths_Build_FailRef(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	somePath := n.FindPath("/some/path").Value
@@ -157,7 +157,7 @@ func TestPaths_Build_FailRefDeadEnd(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	assert.Contains(t, buf.String(), "msg=\"unable to locate reference anywhere in the rolodex\" reference=#/no/path")
 	assert.Contains(t, buf.String(), "msg=\"unable to locate reference anywhere in the rolodex\" reference=#/nowhere")
@@ -185,7 +185,7 @@ func TestPaths_Build_SuccessRef(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	somePath := n.FindPath("/some/path").Value
@@ -222,7 +222,7 @@ func TestPaths_Build_BadParams(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	er := buf.String()
 	assert.Contains(t, er, "array build failed, input is not an array, line 3, column 5")
 }
@@ -257,9 +257,9 @@ func TestPaths_Build_BadRef(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Contains(t, buf.String(), "unable to locate reference anywhere in the rolodex\" reference=#/no-where")
 	assert.Contains(t, buf.String(), "error building path item: path item build failed: cannot find reference: #/no-where at line 4, col 10")
 }
@@ -289,7 +289,7 @@ func TestPathItem_Build_GoodRef(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 }
 
@@ -327,7 +327,7 @@ func TestPathItem_Build_BadRef(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Contains(t, buf.String(), "unable to locate reference anywhere in the rolodex\" reference=#/~1cakes/NotFound")
 	assert.Contains(t, buf.String(), "error building path item: path item build failed: cannot find reference: #/~1another~1path/get at line 4, col 10")
 }
@@ -345,7 +345,7 @@ func TestPathNoOps(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.NoError(t, err)
 }
 
@@ -374,7 +374,7 @@ func TestPathItem_Build_Using_Ref(t *testing.T) {
 	err := low.BuildModel(rootNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, rootNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, rootNode.Content[0], idx)
 	assert.NoError(t, err)
 
 	somePath := n.FindPath("/a/path")
@@ -416,7 +416,7 @@ func TestPath_Build_Using_CircularRef(t *testing.T) {
 	err := low.BuildModel(rootNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	err = n.Build(context.Background(), nil, rootNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, rootNode.Content[0], idx)
 	assert.Error(t, err)
 }
 
@@ -460,7 +460,7 @@ func TestPath_Build_Using_CircularRefWithOp(t *testing.T) {
 	err := low.BuildModel(rootNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, rootNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, rootNode.Content[0], idx)
 	assert.Contains(t, buf.String(), "error building path item: build schema failed: circular reference 'post -> post -> post' found during lookup at line 4, column 7, It cannot be resolved")
 }
 
@@ -487,7 +487,7 @@ func TestPaths_Build_BrokenOp(t *testing.T) {
 	err := low.BuildModel(idxNode.Content[0], &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	assert.Contains(t, buf.String(), "error building path item: object extraction failed: reference at line 4, column 7 is empty, it cannot be resolved")
 }
 
@@ -506,7 +506,7 @@ x-france: french`
 
 	var n Paths
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `/french/toast:
   description: toast
@@ -522,7 +522,7 @@ x-france: french`
 
 	var n2 Paths
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	// hash
 	assert.Equal(t, n.Hash(), n2.Hash())
@@ -564,7 +564,7 @@ func TestPaths_Build_Fail_Many(t *testing.T) {
 	err := low.BuildModel(&idxNode, &n)
 	assert.NoError(t, err)
 
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, err = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 	errors := strings.Split(buf.String(), "\n")
 	assert.Len(t, errors, 1001)
 }

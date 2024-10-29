@@ -5,15 +5,15 @@ package v2
 
 import (
 	"context"
+	"testing"
+
 	"github.com/pb33f/libopenapi/datamodel/low"
 	"github.com/pb33f/libopenapi/index"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
-	"testing"
 )
 
 func TestExamples_Hash(t *testing.T) {
-
 	yml := `something: string
 yes:
   - more
@@ -28,7 +28,7 @@ nothing: int`
 
 	var n Examples
 	_ = low.BuildModel(idxNode.Content[0], &n)
-	_ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
+	_, _ = n.Build(context.Background(), nil, idxNode.Content[0], idx)
 
 	yml2 := `anything:
   cake: burger
@@ -44,8 +44,7 @@ yes:
 
 	var n2 Examples
 	_ = low.BuildModel(idxNode2.Content[0], &n2)
-	_ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
+	_, _ = n2.Build(context.Background(), nil, idxNode2.Content[0], idx2)
 
 	assert.Equal(t, n.Hash(), n2.Hash())
-
 }
