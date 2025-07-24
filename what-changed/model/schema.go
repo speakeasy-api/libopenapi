@@ -349,8 +349,12 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 			lHash := l.Schema().Hash()
 			rHash := r.Schema().Hash()
 			if lHash != rHash {
+				var rContentNode *yaml.Node = r.GetValueNode()
+				if len(r.GetValueNode().Content) > 1 {
+					rContentNode = r.GetValueNode().Content[1]
+				}
 				CreateChange(&changes, Modified, v3.RefLabel,
-					l.GetValueNode(), r.GetValueNode().Content[1], true, l, r.GetReference())
+					l.GetValueNode(), rContentNode, true, l, r.GetReference())
 				sc.PropertyChanges = NewPropertyChanges(changes)
 				return sc // we're done here
 			}
@@ -363,8 +367,12 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 			lHash := l.Schema().Hash()
 			rHash := r.Schema().Hash()
 			if lHash != rHash {
+				var lContentNode *yaml.Node = l.GetValueNode()
+				if len(l.GetValueNode().Content) > 1 {
+					lContentNode = l.GetValueNode().Content[1]
+				}
 				CreateChange(&changes, Modified, v3.RefLabel,
-					l.GetValueNode().Content[1], r.GetValueNode(), true, l.GetReference(), r)
+					lContentNode, r.GetValueNode(), true, l.GetReference(), r)
 				sc.PropertyChanges = NewPropertyChanges(changes)
 				return sc // done, nothing else to do.
 			}
