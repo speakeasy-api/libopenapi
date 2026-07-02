@@ -346,9 +346,11 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 		if !l.IsReference() && r.IsReference() {
 			// check if the referenced schema matches or not
 			// https://github.com/pb33f/libopenapi/issues/218
-			lHash := l.Schema().Hash()
-			rHash := r.Schema().Hash()
-			if lHash != rHash {
+			// if either proxy cannot be resolved (e.g. an unresolvable circular reference),
+			// equality cannot be proven, so report the change instead of hashing a nil schema.
+			lSchema := l.Schema()
+			rSchema := r.Schema()
+			if lSchema == nil || rSchema == nil || lSchema.Hash() != rSchema.Hash() {
 				var rContentNode *yaml.Node = r.GetValueNode()
 				if len(r.GetValueNode().Content) > 1 {
 					rContentNode = r.GetValueNode().Content[1]
@@ -364,9 +366,11 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 		if l.IsReference() && !r.IsReference() {
 			// check if the referenced schema matches or not
 			// https://github.com/pb33f/libopenapi/issues/218
-			lHash := l.Schema().Hash()
-			rHash := r.Schema().Hash()
-			if lHash != rHash {
+			// if either proxy cannot be resolved (e.g. an unresolvable circular reference),
+			// equality cannot be proven, so report the change instead of hashing a nil schema.
+			lSchema := l.Schema()
+			rSchema := r.Schema()
+			if lSchema == nil || rSchema == nil || lSchema.Hash() != rSchema.Hash() {
 				var lContentNode *yaml.Node = l.GetValueNode()
 				if len(l.GetValueNode().Content) > 1 {
 					lContentNode = l.GetValueNode().Content[1]
@@ -380,6 +384,18 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 
 		lSchema := l.Schema()
 		rSchema := r.Schema()
+
+		// if either proxy cannot be resolved (e.g. an unresolvable circular reference),
+		// the schemas cannot be walked. Report a modification if only one side is nil.
+		if lSchema == nil || rSchema == nil {
+			if lSchema != rSchema {
+				CreateChange(&changes, Modified, v3.SchemaLabel,
+					l.GetValueNode(), r.GetValueNode(), true, l, r)
+				sc.PropertyChanges = NewPropertyChanges(changes)
+				return sc
+			}
+			return nil
+		}
 
 		if low.AreEqual(lSchema, rSchema) {
 			// there is no point going on, we know nothing changed!

@@ -1970,3 +1970,11 @@ func TestExtractSchema_CheckExampleNodesExtracted(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestSchema_Hash_NilReceiver(t *testing.T) {
+	// a nil schema (e.g. from a SchemaProxy that failed to resolve) must not panic
+	// and hashes like an empty schema.
+	var s *Schema
+	empty := &Schema{}
+	assert.Equal(t, empty.Hash(), s.Hash())
+}
