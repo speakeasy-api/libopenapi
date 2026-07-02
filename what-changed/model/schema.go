@@ -304,6 +304,15 @@ func (s *SchemaChanges) TotalBreakingChanges() int {
 	return t
 }
 
+// schemasProvablyEqual checks that both proxies resolve and hash identically. If either proxy
+// cannot be resolved (e.g. an unresolvable circular reference), equality cannot be proven, so a
+// change should be reported instead of hashing a nil schema.
+func schemasProvablyEqual(l, r *base.SchemaProxy) bool {
+	lSchema := l.Schema()
+	rSchema := r.Schema()
+	return lSchema != nil && rSchema != nil && lSchema.Hash() == rSchema.Hash()
+}
+
 // CompareSchemas accepts a left and right SchemaProxy and checks for changes. If anything is found, returns
 // a pointer to SchemaChanges, otherwise returns nil
 func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
@@ -346,11 +355,7 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 		if !l.IsReference() && r.IsReference() {
 			// check if the referenced schema matches or not
 			// https://github.com/pb33f/libopenapi/issues/218
-			// if either proxy cannot be resolved (e.g. an unresolvable circular reference),
-			// equality cannot be proven, so report the change instead of hashing a nil schema.
-			lSchema := l.Schema()
-			rSchema := r.Schema()
-			if lSchema == nil || rSchema == nil || lSchema.Hash() != rSchema.Hash() {
+			if !schemasProvablyEqual(l, r) {
 				var rContentNode *yaml.Node = r.GetValueNode()
 				if len(r.GetValueNode().Content) > 1 {
 					rContentNode = r.GetValueNode().Content[1]
@@ -366,11 +371,7 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 		if l.IsReference() && !r.IsReference() {
 			// check if the referenced schema matches or not
 			// https://github.com/pb33f/libopenapi/issues/218
-			// if either proxy cannot be resolved (e.g. an unresolvable circular reference),
-			// equality cannot be proven, so report the change instead of hashing a nil schema.
-			lSchema := l.Schema()
-			rSchema := r.Schema()
-			if lSchema == nil || rSchema == nil || lSchema.Hash() != rSchema.Hash() {
+			if !schemasProvablyEqual(l, r) {
 				var lContentNode *yaml.Node = l.GetValueNode()
 				if len(l.GetValueNode().Content) > 1 {
 					lContentNode = l.GetValueNode().Content[1]
