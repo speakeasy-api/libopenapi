@@ -57,7 +57,7 @@ func createDocument(info *datamodel.SpecInfo, config *datamodel.DocumentConfigur
 	doc.Rolodex = rolodex
 
 	// If basePath is provided, add a local filesystem to the rolodex.
-	if idxConfig.BasePath != "" || config.AllowFileReferences {
+	if idxConfig.BasePath != "" && config.AllowFileReferences {
 		var cwd string
 		cwd, _ = filepath.Abs(config.BasePath)
 		// if a supplied local filesystem is provided, add it to the rolodex.

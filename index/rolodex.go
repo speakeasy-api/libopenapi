@@ -357,7 +357,7 @@ func (r *Rolodex) IndexTheRolodex() error {
 		// which does not exist, but is used to formulate the absolute path to root references correctly.
 		if r.indexConfig.BasePath != "" && r.indexConfig.BaseURL == nil {
 			basePath := r.indexConfig.BasePath
-			if !filepath.IsAbs(basePath) {
+			if !filepath.IsAbs(basePath) && r.indexConfig.AllowFileLookup {
 				basePath, _ = filepath.Abs(basePath)
 			}
 

@@ -3232,3 +3232,67 @@ components:
 	assert.Equal(t, 1, changes.TotalChanges())
 
 }
+
+func TestCompareSchemas_UnresolvableCircularAliasRef(t *testing.T) {
+	// a property that changes between an inline schema and a $ref pointing at a
+	// ref-to-ref alias chain inside a reference cycle. The alias chain cannot be
+	// resolved by the proxy (circular lookup), so SchemaProxy.Schema() returns nil;
+	// comparing must report a change, not panic hashing a nil schema.
+	inline := `openapi: 3.1.0
+components:
+  schemas:
+    VendorCredentialSummary:
+      $ref: "#/components/schemas/VendorCredentialFile"
+    VendorCredentialFile:
+      $ref: "#/components/schemas/VendorCredentialFileImpl"
+    VendorCredentialFileImpl:
+      type: object
+      properties:
+        summary:
+          $ref: "#/components/schemas/VendorCredentialSummary"
+    VendorCredentialDataRequest:
+      type: object
+      properties:
+        summary:
+          allOf:
+            - type: object
+              additionalProperties: true
+`
+
+	ref := `openapi: 3.1.0
+components:
+  schemas:
+    VendorCredentialSummary:
+      $ref: "#/components/schemas/VendorCredentialFile"
+    VendorCredentialFile:
+      $ref: "#/components/schemas/VendorCredentialFileImpl"
+    VendorCredentialFileImpl:
+      type: object
+      properties:
+        summary:
+          $ref: "#/components/schemas/VendorCredentialSummary"
+    VendorCredentialDataRequest:
+      type: object
+      properties:
+        summary:
+          $ref: "#/components/schemas/VendorCredentialSummary"
+`
+
+	leftDoc, rightDoc := test_BuildDoc(inline, ref)
+
+	// inline -> ref
+	lSchemaProxy := leftDoc.Components.Value.FindSchema("VendorCredentialDataRequest").Value
+	rSchemaProxy := rightDoc.Components.Value.FindSchema("VendorCredentialDataRequest").Value
+	changes := CompareSchemas(lSchemaProxy, rSchemaProxy)
+	assert.NotNil(t, changes)
+	assert.Equal(t, 1, changes.TotalChanges())
+	assert.Equal(t, Modified, changes.GetAllChanges()[0].ChangeType)
+	assert.Equal(t, v3.RefLabel, changes.GetAllChanges()[0].Property)
+
+	// ref -> inline
+	changes = CompareSchemas(rSchemaProxy, lSchemaProxy)
+	assert.NotNil(t, changes)
+	assert.Equal(t, 1, changes.TotalChanges())
+	assert.Equal(t, Modified, changes.GetAllChanges()[0].ChangeType)
+	assert.Equal(t, v3.RefLabel, changes.GetAllChanges()[0].Property)
+}
