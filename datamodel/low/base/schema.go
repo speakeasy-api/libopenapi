@@ -162,6 +162,10 @@ func (s *Schema) GetContext() context.Context {
 // Hash will calculate a SHA256 hash from the values of the schema, This allows equality checking against
 // Schemas defined inside an OpenAPI document. The only way to know if a schema has changed, is to hash it.
 func (s *Schema) Hash() [32]byte {
+	// a nil schema (e.g. from a SchemaProxy that failed to resolve) hashes like an empty one.
+	if s == nil {
+		return sha256.Sum256([]byte{})
+	}
 	// calculate a hash from every property in the schema.
 	var d []string
 	if !s.SchemaTypeRef.IsEmpty() {
