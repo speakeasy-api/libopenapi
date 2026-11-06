@@ -3296,3 +3296,128 @@ components:
 	assert.Equal(t, Modified, changes.GetAllChanges()[0].ChangeType)
 	assert.Equal(t, v3.RefLabel, changes.GetAllChanges()[0].Property)
 }
+
+func TestCompareSchemas_PropertiesAdded_MatchedByName(t *testing.T) {
+	// adding properties shifts the sorted position of the existing ones, so
+	// "labels" on the left lines up with "entries" on the right. Existing
+	// properties must still be compared with their namesake.
+	left := `openapi: 3.1.0
+components:
+  schemas:
+    Thing:
+      type: object
+      properties:
+        id:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AnyValue'
+        entries:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Entry'
+    Entry:
+      type: object
+      properties:
+        name:
+          type: string
+    AnyValue: {}`
+
+	right := `openapi: 3.1.0
+components:
+  schemas:
+    Thing:
+      type: object
+      properties:
+        id:
+          type: string
+        aaa:
+          type: integer
+        aab:
+          type: integer
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AnyValue'
+        entries:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Entry'
+    Entry:
+      type: object
+      properties:
+        name:
+          type: string
+    AnyValue: {}`
+
+	leftDoc, rightDoc := test_BuildDoc(left, right)
+
+	lSchemaProxy := leftDoc.Components.Value.FindSchema("Thing").Value
+	rSchemaProxy := rightDoc.Components.Value.FindSchema("Thing").Value
+
+	changes := CompareSchemas(lSchemaProxy, rSchemaProxy)
+	assert.NotNil(t, changes)
+	assert.Equal(t, 2, changes.TotalChanges())
+	assert.Equal(t, 0, changes.TotalBreakingChanges())
+	for _, change := range changes.GetAllChanges() {
+		assert.Equal(t, ObjectAdded, change.ChangeType)
+		assert.Equal(t, v3.PropertiesLabel, change.Property)
+	}
+}
+
+func TestCompareSchemas_RefChanged_EmptySchema(t *testing.T) {
+	// a $ref that moves between an empty schema and a populated one.
+	empty := `openapi: 3.1.0
+components:
+  schemas:
+    Thing:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AnyValue'
+    Entry:
+      type: object
+      properties:
+        name:
+          type: string
+    AnyValue: {}`
+
+	populated := `openapi: 3.1.0
+components:
+  schemas:
+    Thing:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Entry'
+    Entry:
+      type: object
+      properties:
+        name:
+          type: string
+    AnyValue: {}`
+
+	leftDoc, rightDoc := test_BuildDoc(empty, populated)
+
+	lSchemaProxy := leftDoc.Components.Value.FindSchema("Thing").Value
+	rSchemaProxy := rightDoc.Components.Value.FindSchema("Thing").Value
+
+	// empty -> populated
+	changes := CompareSchemas(lSchemaProxy, rSchemaProxy)
+	assert.NotNil(t, changes)
+	assert.Equal(t, 1, changes.TotalChanges())
+	assert.Equal(t, Modified, changes.GetAllChanges()[0].ChangeType)
+	assert.Equal(t, v3.RefLabel, changes.GetAllChanges()[0].Property)
+
+	// populated -> empty
+	changes = CompareSchemas(rSchemaProxy, lSchemaProxy)
+	assert.NotNil(t, changes)
+	assert.Equal(t, 1, changes.TotalChanges())
+	assert.Equal(t, Modified, changes.GetAllChanges()[0].ChangeType)
+	assert.Equal(t, v3.RefLabel, changes.GetAllChanges()[0].Property)
+}
