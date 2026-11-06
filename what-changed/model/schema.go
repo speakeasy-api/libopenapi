@@ -343,8 +343,16 @@ func CompareSchemas(l, r *base.SchemaProxy) *SchemaChanges {
 				return nil
 			} else {
 				// references are different, that's all we care to know.
+				var lContentNode *yaml.Node = l.GetValueNode()
+				if len(l.GetValueNode().Content) > 1 {
+					lContentNode = l.GetValueNode().Content[1]
+				}
+				var rContentNode *yaml.Node = r.GetValueNode()
+				if len(r.GetValueNode().Content) > 1 {
+					rContentNode = r.GetValueNode().Content[1]
+				}
 				CreateChange(&changes, Modified, v3.RefLabel,
-					l.GetValueNode().Content[1], r.GetValueNode().Content[1], true, l.GetReference(),
+					lContentNode, rContentNode, true, l.GetReference(),
 					r.GetReference())
 				sc.PropertyChanges = NewPropertyChanges(changes)
 				return sc
@@ -592,7 +600,7 @@ func buildProperty(lProps, rProps []string, lEntities, rEntities map[string]*bas
 		for w := range lProps {
 			if rEntities[lProps[w]] != nil {
 				wg.Add(1)
-				go checkProperty(lProps[w], lEntities[lProps[w]], rEntities[rProps[w]])
+				go checkProperty(lProps[w], lEntities[lProps[w]], rEntities[lProps[w]])
 			} else {
 				CreateChange(changes, ObjectRemoved, v3.PropertiesLabel,
 					nil, lKeyNodes[lProps[w]], true, lEntities[lProps[w]], nil)
